@@ -505,8 +505,9 @@ export default function HomePage() {
                     </div>
                   ) : (
                     <h4 
-                      className="text-xs font-bold text-white uppercase whitespace-nowrap transition-all duration-300"
+                      className="font-bold text-white uppercase whitespace-nowrap transition-all duration-300"
                       style={{
+                        fontSize: '2.25rem', // text-xs (0.75rem) * 3
                         opacity: expandedCardIndex === null ? 1 : 0,
                         transform: expandedCardIndex === null ? 'translateY(0)' : 'translateY(-10px)'
                       }}
@@ -582,8 +583,9 @@ export default function HomePage() {
                     </div>
                   ) : (
                     <h4 
-                      className="text-xs font-bold text-white uppercase whitespace-nowrap transition-all duration-300"
+                      className="font-bold text-white uppercase whitespace-nowrap transition-all duration-300"
                       style={{
+                        fontSize: '2.25rem', // text-xs (0.75rem) * 3
                         opacity: expandedCardIndex === null ? 1 : 0,
                         transform: expandedCardIndex === null ? 'translateY(0)' : 'translateY(-10px)'
                       }}
@@ -659,8 +661,9 @@ export default function HomePage() {
                     </div>
                   ) : (
                     <h4 
-                      className="text-xs font-bold text-white uppercase whitespace-nowrap transition-all duration-300"
+                      className="font-bold text-white uppercase whitespace-nowrap transition-all duration-300"
                       style={{
+                        fontSize: '2.25rem', // text-xs (0.75rem) * 3
                         opacity: expandedCardIndex === null ? 1 : 0,
                         transform: expandedCardIndex === null ? 'translateY(0)' : 'translateY(-10px)'
                       }}
@@ -736,8 +739,9 @@ export default function HomePage() {
                     </div>
                   ) : (
                     <h4 
-                      className="text-xs font-bold text-white uppercase whitespace-nowrap transition-all duration-300"
+                      className="font-bold text-white uppercase whitespace-nowrap transition-all duration-300"
                       style={{
+                        fontSize: '2.25rem', // text-xs (0.75rem) * 3
                         opacity: expandedCardIndex === null ? 1 : 0,
                         transform: expandedCardIndex === null ? 'translateY(0)' : 'translateY(-10px)'
                       }}
@@ -810,14 +814,14 @@ export default function HomePage() {
                 </div>
                 {/* 統計 2 */}
                 <div className="space-y-2 text-left lg:text-right">
-                  <div className="text-4xl lg:text-5xl font-bold text-white">{counters.stat2}+</div>
+                  <div className="text-4xl lg:text-5xl font-bold text-white">{counters.stat2.toLocaleString()}</div>
                   <div className="text-sm lg:text-base text-white/70">
                     服務顧客總數超過
                   </div>
                 </div>
                 {/* 統計 3 */}
                 <div className="space-y-2 text-left lg:text-right">
-                  <div className="text-4xl lg:text-5xl font-bold text-white">{counters.stat3}+</div>
+                  <div className="text-4xl lg:text-5xl font-bold text-white">{counters.stat3.toLocaleString()}</div>
                   <div className="text-sm lg:text-base text-white/70">
                     完成案件數超過
                   </div>
