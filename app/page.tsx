@@ -25,6 +25,7 @@ export default function HomePage() {
   const [counters, setCounters] = useState({ stat1: 0, stat2: 0, stat3: 0 });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [heroHeight, setHeroHeight] = useState<number>(800);
+  const [isHeaderFixed, setIsHeaderFixed] = useState(false);
   const hasAnimatedRef = useRef(false);
   const statsRef = useRef<HTMLDivElement>(null);
 
@@ -164,7 +165,10 @@ export default function HomePage() {
       
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setScrollY(window.scrollY);
+          const currentScrollY = window.scrollY;
+          setScrollY(currentScrollY);
+          // 當滾動超過 100px 時，固定 header（僅手機版和平板版）
+          setIsHeaderFixed(currentScrollY > 100);
           ticking = false;
         });
         ticking = true;
@@ -219,8 +223,121 @@ export default function HomePage() {
 
   return (
     <main className="bg-white text-black overflow-x-hidden w-full">
+      {/* Header - 固定在頂部（手機版和平板版，僅在滾動時） */}
+      <header className={`${isHeaderFixed ? 'fixed' : 'absolute'} lg:relative top-0 left-0 right-0 z-50 py-4 sm:py-6 lg:pt-8 lg:pb-8 lg:pl-8 xl:pl-12 ${isHeaderFixed ? 'bg-white/60 backdrop-blur-md shadow-sm' : 'bg-transparent'} lg:bg-transparent transition-all duration-300`}>
+        <div className="flex items-center justify-between lg:justify-start px-4 sm:px-6 lg:px-0 h-full">
+          <div className="flex justify-center lg:justify-start flex-1 lg:flex-none absolute left-1/2 -translate-x-1/2 lg:static lg:left-auto lg:translate-x-0">
+            <img
+              src="/brand/logo.svg"
+              alt="名片王"
+              className="h-16 sm:h-24 lg:h-16"
+            />
+          </div>
+
+          {/* 桌面版導航菜單 */}
+          <nav className="hidden lg:flex items-center gap-8 ml-8">
+            {NAV.map((item) => (
+              item.href ? (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  className="hover:opacity-70 transition-opacity text-sm tracking-wide cursor-pointer"
+                  style={{ color: 'rgb(255, 127, 127)' }}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  key={item.id}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleNavClick(item.id, item.href);
+                  }}
+                  className="hover:opacity-70 transition-opacity text-sm tracking-wide cursor-pointer"
+                  style={{ color: 'rgb(255, 127, 127)' }}
+                >
+                  {item.label}
+                </button>
+              )
+            ))}
+          </nav>
+
+          {/* 手機和平板版本的MENU圖標 */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="lg:hidden p-2 focus:outline-none"
+            style={{ color: 'rgb(255, 127, 127)' }}
+            aria-label="選單"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              {isMenuOpen ? (
+                // X 圖標（關閉）
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                // 漢堡圖標（開啟）
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </button>
+        </div>
+
+        {/* 手機和平板版本的導航菜單 */}
+        <nav 
+          className={`lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg z-[60] mt-2 overflow-hidden transition-all duration-500 ease-out ${
+            isMenuOpen 
+              ? 'opacity-100 translate-y-0 max-h-96' 
+              : 'opacity-0 -translate-y-4 max-h-0 pointer-events-none'
+          }`}
+        >
+          <div className="flex flex-col px-4 py-4">
+            {NAV.map((item) => (
+              item.href ? (
+                <Link
+                  key={item.id}
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-left py-3 px-4 hover:bg-black/5 transition-colors text-base cursor-pointer"
+                  style={{ color: 'rgb(255, 127, 127)' }}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  key={item.id}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleNavClick(item.id, item.href);
+                  }}
+                  className="text-left py-3 px-4 hover:bg-black/5 transition-colors text-base cursor-pointer"
+                  style={{ color: 'rgb(255, 127, 127)' }}
+                >
+                  {item.label}
+                </button>
+              )
+            ))}
+          </div>
+        </nav>
+      </header>
+
       {/* HERO / STAGE */}
-      <section ref={heroSectionRef} className="relative min-h-screen overflow-hidden bg-white">
+      <section ref={heroSectionRef} className={`relative min-h-screen overflow-hidden bg-white ${isHeaderFixed ? 'lg:pt-0 pt-24 sm:pt-28' : ''}`}>
         {/* 背景圖 */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
@@ -270,115 +387,6 @@ export default function HomePage() {
             );
           })()}
         </div>
-
-        {/* 品牌標誌 */}
-        <header className="relative z-50 pt-8 sm:pt-12 lg:pt-8 lg:pl-8 xl:pl-12">
-          <div className="flex items-center justify-between lg:justify-start px-4 sm:px-6 lg:px-0">
-            <div className="flex justify-center lg:justify-start flex-1 lg:flex-none absolute left-1/2 -translate-x-1/2 lg:static lg:left-auto lg:translate-x-0">
-              <img
-                src="/brand/logo.svg"
-                alt="名片王"
-                className="h-16 sm:h-24 lg:h-16"
-              />
-                </div>
-
-            {/* 桌面版導航菜單 */}
-            <nav className="hidden lg:flex items-center gap-8 ml-8">
-  {NAV.map((item) => (
-                item.href ? (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    className="hover:opacity-70 transition-opacity text-sm tracking-wide cursor-pointer"
-                    style={{ color: 'rgb(255, 127, 127)' }}
-                  >
-        {item.label}
-                  </Link>
-                ) : (
-                  <button
-                    key={item.id}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleNavClick(item.id, item.href);
-                    }}
-                    className="hover:opacity-70 transition-opacity text-sm tracking-wide cursor-pointer"
-                    style={{ color: 'rgb(255, 127, 127)' }}
-                  >
-                    {item.label}
-                  </button>
-                )
-              ))}
-            </nav>
-
-            {/* 手機和平板版本的MENU圖標 */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2 focus:outline-none"
-              style={{ color: 'rgb(255, 127, 127)' }}
-              aria-label="選單"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                {isMenuOpen ? (
-                  // X 圖標（關閉）
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  // 漢堡圖標（開啟）
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
-          </div>
-
-          {/* 手機和平板版本的導航菜單 */}
-          {isMenuOpen && (
-            <nav className="lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg z-[60] mt-2">
-              <div className="flex flex-col px-4 py-4">
-                {NAV.map((item) => (
-                  item.href ? (
-    <Link
-                      key={item.id}
-                      href={item.href}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="text-left py-3 px-4 hover:bg-black/5 transition-colors text-base cursor-pointer"
-                      style={{ color: 'rgb(255, 127, 127)' }}
-                    >
-                      {item.label}
-    </Link>
-                  ) : (
-                    <button
-                      key={item.id}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleNavClick(item.id, item.href);
-                      }}
-                      className="text-left py-3 px-4 hover:bg-black/5 transition-colors text-base cursor-pointer"
-                      style={{ color: 'rgb(255, 127, 127)' }}
-                    >
-                      {item.label}
-                    </button>
-                  )
-                ))}
-  </div>
-</nav>
-          )}
-        </header>
 
         {/* 主要內容區域 */}
         <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-8 sm:px-12 lg:px-16" style={{ marginTop: '-10vh' }}>
