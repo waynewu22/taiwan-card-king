@@ -406,22 +406,12 @@ export default function HomePage() {
               >
                 {/* 中央標題 */}
                 <h1 
-                  className={`text-4xl sm:text-6xl lg:text-7xl font-bold text-black mb-6 leading-tight whitespace-nowrap ${
+                  className={`text-4xl sm:text-6xl lg:text-7xl font-bold text-black/70 mb-6 leading-tight ${
                     isTitleVisible ? 'animate-fade-in-up' : 'opacity-0'
                   }`}
                 >
-                  20周年服務不間斷
+                  名片王<br />二十年服務不間斷
                 </h1>
-
-                {/* 說明文字 */}
-                <div 
-                  className={`text-xl sm:text-2xl text-black mb-8 space-y-2 ${
-                    isTitleVisible ? 'animate-fade-in-up-delay-1' : 'opacity-0'
-                  }`}
-                >
-                  <p>我們協助你從看得到(想得到?)</p>
-                  <p>變成摸得到</p>
-            </div>
 
                 {/* 向下滾動提示箭頭 */}
                 <div 

@@ -330,6 +330,10 @@ export default function PricingPage() {
       {/* 標籤切換 */}
       <section className={`py-8 px-6 border-b border-black/10 ${isHeaderFixed ? 'lg:pt-8 pt-24 sm:pt-28' : ''}`}>
         <div className="max-w-7xl mx-auto">
+          {/* H1 標題 */}
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-black/70 mb-8 text-center">
+            價格表
+          </h1>
           {/* 標籤切換 */}
           <div className="flex justify-start gap-4">
             <button
