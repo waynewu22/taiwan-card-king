@@ -2152,7 +2152,7 @@ function ContactForm() {
       
       // 如果有檔案，使用 API route；否則使用 Formspree
       const hasFile = formData.file !== null;
-      if (hasFile) {
+      if (formData.file) {
         formDataToSend.append("file", formData.file);
       }
 
