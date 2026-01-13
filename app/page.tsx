@@ -2149,17 +2149,27 @@ function ContactForm() {
       formDataToSend.append("inquiry", formData.inquiry);
       formDataToSend.append("email", formData.email);
       formDataToSend.append("note", formData.note);
-      if (formData.file) {
+      
+      // 如果有檔案，使用 API route；否則使用 Formspree
+      const hasFile = formData.file !== null;
+      if (hasFile) {
         formDataToSend.append("file", formData.file);
       }
 
-      const response = await fetch("/api/contact", {
+      const url = hasFile ? "/api/contact" : "https://formspree.io/f/xzddbjvo";
+      const headers: HeadersInit = hasFile 
+        ? {} 
+        : { Accept: "application/json" };
+
+      const response = await fetch(url, {
         method: "POST",
         body: formDataToSend,
+        headers,
       });
 
       if (response.ok) {
         setSubmitStatus("success");
+        setErrors({}); // 清除所有錯誤
         setFormData({
           name: "",
           phone: "",
@@ -2175,6 +2185,12 @@ function ContactForm() {
         const errorData = await response.json().catch(() => ({}));
         console.error("表單提交失敗:", response.status, errorData);
         setSubmitStatus("error");
+        // 顯示具體錯誤訊息
+        if (errorData.error) {
+          setErrors({ submit: errorData.error });
+        } else {
+          setErrors({ submit: "送出失敗，請稍後再試或直接透過電話/Email 與我們聯絡。" });
+        }
       }
     } catch (error) {
       console.error("表單提交錯誤:", error);
@@ -2368,7 +2384,7 @@ function ContactForm() {
       )}
       {submitStatus === "error" && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-800">
-          送出失敗，請稍後再試或直接透過電話/Email 與我們聯絡。
+          {errors.submit || "送出失敗，請稍後再試或直接透過電話/Email 與我們聯絡。"}
         </div>
       )}
     </form>

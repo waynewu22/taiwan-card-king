@@ -28,12 +28,24 @@ export async function POST(request: NextRequest) {
       requireTLS: true, // 要求使用 TLS
       auth: {
         user: process.env.SMTP_USER || "yunseng.design@msa.hinet.net",
-        pass: process.env.SMTP_PASSWORD || "",
+        pass: process.env.SMTP_PASSWORD || "uson-530418",
       },
       tls: {
         rejectUnauthorized: false, // 允許自簽名證書
       },
+      connectionTimeout: 10000, // 10 秒連線超時
+      greetingTimeout: 10000, // 10 秒問候超時
+      socketTimeout: 10000, // 10 秒 socket 超時
     };
+
+    // 驗證必要配置
+    // 注意：生產環境應該使用環境變數，不要硬編碼密碼
+    if (!smtpConfig.auth.pass) {
+      return NextResponse.json(
+        { error: "SMTP 密碼未設定，請檢查環境變數 SMTP_PASSWORD" },
+        { status: 500 }
+      );
+    }
 
     console.log("SMTP 配置:", {
       host: smtpConfig.host,
@@ -43,6 +55,19 @@ export async function POST(request: NextRequest) {
     });
 
     const transporter = nodemailer.createTransport(smtpConfig);
+    
+    // 驗證連線
+    try {
+      await transporter.verify();
+      console.log("SMTP 連線驗證成功");
+    } catch (verifyError) {
+      console.error("SMTP 連線驗證失敗:", verifyError);
+      const verifyErr = verifyError as { message?: string; code?: string };
+      return NextResponse.json(
+        { error: `SMTP 連線失敗: ${verifyErr.message || "無法連接到郵件伺服器"}` },
+        { status: 500 }
+      );
+    }
 
     // 準備附件
     const attachments = [];
@@ -96,20 +121,37 @@ export async function POST(request: NextRequest) {
     );
   } catch (error: unknown) {
     console.error("郵件發送錯誤:", error);
-    const err = error as { message?: string; code?: string; response?: unknown; command?: string };
+    const err = error as { 
+      message?: string; 
+      code?: string; 
+      response?: string | { message?: string; response?: string };
+      command?: string;
+      responseCode?: number;
+    };
+    
     console.error("錯誤詳情:", {
       message: err.message,
       code: err.code,
       response: err.response,
       command: err.command,
+      responseCode: err.responseCode,
     });
     
-    // 返回更詳細的錯誤訊息
-    const errorMessage = err.response
-      ? `郵件伺服器錯誤: ${err.response}`
-      : err.message
-      ? `郵件發送失敗: ${err.message}`
-      : "郵件發送失敗，請稍後再試或直接透過電話/Email 與我們聯絡";
+    // 處理常見的錯誤情況
+    let errorMessage = "郵件發送失敗，請稍後再試或直接透過電話/Email 與我們聯絡";
+    
+    if (err.code === "EAUTH") {
+      errorMessage = "郵件認證失敗，請檢查 SMTP 帳號和密碼是否正確";
+    } else if (err.code === "ECONNECTION" || err.code === "ETIMEDOUT") {
+      errorMessage = "無法連接到郵件伺服器，請檢查網路連線或 SMTP 設定";
+    } else if (err.response) {
+      const responseStr = typeof err.response === 'string' 
+        ? err.response 
+        : err.response.message || err.response.response || JSON.stringify(err.response);
+      errorMessage = `郵件伺服器錯誤: ${responseStr}`;
+    } else if (err.message) {
+      errorMessage = `郵件發送失敗: ${err.message}`;
+    }
     
     return NextResponse.json(
       { error: errorMessage },
