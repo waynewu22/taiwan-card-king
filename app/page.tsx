@@ -398,7 +398,7 @@ export default function HomePage() {
               >
                 {/* 中央標題 */}
                 <h1 
-                  className={`text-5xl sm:text-6xl lg:text-7xl font-bold text-black mb-6 leading-tight ${
+                  className={`text-4xl sm:text-6xl lg:text-7xl font-bold text-black mb-6 leading-tight whitespace-nowrap ${
                     isTitleVisible ? 'animate-fade-in-up' : 'opacity-0'
                   }`}
                 >
