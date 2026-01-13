@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html { 
+  scroll-behavior: smooth;
+  scroll-padding-top: 0;
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-overflow-scrolling: touch; /* iOS 平滑滾動 */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-noto-sans-tc), "Microsoft JhengHei", "微軟正黑體", Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* iOS 平滑滾動 */
+}
+
+/* 優化滾動性能 */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 自定義平滑滾動速度（較慢） */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    scroll-behavior: smooth;
+  }
+}
+
+/* 導航連結顏色 */
+.nav-link-text {
+  color: rgb(255, 127, 127) !important; /* 顏色四：珊瑚粉紅色 */
+  transition: color 0.3s;
+}
+.nav-link:hover .nav-link-text {
+  color: rgb(74, 144, 226) !important; /* 顏色三：鮮豔藍色 */
+}
+.nav-link-line {
+  background-color: rgba(255, 127, 127, 0.5) !important; /* 顏色四 */
+  transition: background-color 0.3s;
+}
+.nav-link:hover .nav-link-line {
+  background-color: rgba(74, 144, 226, 0.5) !important; /* 顏色三 */
+}
+
+/* 服務項目流水線動畫 */
+@keyframes scroll-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-horizontal-reverse {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(50%);
+  }
+}
+
+/* 首頁標題進場動畫 */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animate-fade-in-up-delay-1 {
+  animation: fadeInUp 0.8s ease-out 0.0s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-up-delay-2 {
+  animation: fadeInUp 0.8s ease-out 0.8s forwards;
+  opacity: 0;
+}
+
+/* 向下箭頭動畫 */
+@keyframes bounce-down {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(15px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-bounce-down {
+  animation: bounce-down 1.5s ease-in-out infinite;
+  display: inline-block;
+}
+
+/* 手機版卡片樣式 - 2x2 網格，正方形 */
+@media (max-width: 639px) {
+  /* 覆蓋 Tailwind 的 sm:min-h-[500px] */
+  .service-card-mobile.sm\:min-h-\[500px\] {
+    min-height: auto !important;
+    height: auto !important;
+  }
+  
+  .service-card-mobile {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: auto !important;
+    max-height: none !important;
+    aspect-ratio: 1 / 1 !important;
+  }
+}
+
+/* 平板和桌電版卡片樣式 - 固定高度，只改變寬度 */
+@media (min-width: 640px) {
+  .service-card-mobile {
+    height: 400px !important;
+    max-height: 400px !important;
+    min-height: 400px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .service-card-mobile {
+    height: 500px !important;
+    max-height: 500px !important;
+    min-height: 500px !important;
+  }
+}
