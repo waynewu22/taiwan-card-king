@@ -2153,12 +2153,9 @@ function ContactForm() {
         formDataToSend.append("file", formData.file);
       }
 
-      const response = await fetch("https://formspree.io/f/xzddbjvo", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         body: formDataToSend,
-        headers: {
-          Accept: "application/json",
-        },
       });
 
       if (response.ok) {
