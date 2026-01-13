@@ -2068,12 +2068,12 @@ function ContactForm() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       
-      // 檢查檔案大小（Vercel 限制為 4.5MB，我們設定為 4MB）
-      const maxFileSize = 4 * 1024 * 1024; // 4MB
+      // 檢查檔案大小（Vercel 限制為 4.5MB）
+      const maxFileSize = 4.5 * 1024 * 1024; // 4.5MB
       if (file.size > maxFileSize) {
         setErrors((prev) => ({
           ...prev,
-          file: `檔案大小超過限制（最大 4MB），您的檔案大小為 ${(file.size / 1024 / 1024).toFixed(2)}MB`,
+          file: `檔案大小超過限制（最大 4.5MB），您的檔案大小為 ${(file.size / 1024 / 1024).toFixed(2)}MB。如需上傳較大檔案，請直接透過電話或 Email 聯繫我們的專人服務。`,
         }));
         e.target.value = "";
         setFormData((prev) => ({ ...prev, file: null }));
@@ -2200,7 +2200,7 @@ function ContactForm() {
         setSubmitStatus("error");
         // 顯示具體錯誤訊息
         if (response.status === 413) {
-          setErrors({ submit: errorData.error || "檔案大小超過限制（最大 4MB），請壓縮檔案後再試或直接透過電話/Email 與我們聯絡。" });
+          setErrors({ submit: errorData.error || "檔案大小超過限制（最大 4.5MB）。如需上傳較大檔案，請直接透過電話（04-22549828）或 Email（yunseng.design@msa.hinet.net）聯繫我們的專人服務。" });
         } else if (errorData.error) {
           setErrors({ submit: errorData.error });
         } else {

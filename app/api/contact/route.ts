@@ -72,11 +72,11 @@ export async function POST(request: NextRequest) {
     // 準備附件
     const attachments = [];
     if (file) {
-      // 驗證檔案大小（Vercel serverless function 限制為 4.5MB，我們設定為 4MB 以留緩衝）
-      const maxFileSize = 4 * 1024 * 1024; // 4MB
+      // 驗證檔案大小（Vercel serverless function 限制為 4.5MB）
+      const maxFileSize = 4.5 * 1024 * 1024; // 4.5MB
       if (file.size > maxFileSize) {
         return NextResponse.json(
-          { error: `檔案大小超過限制（最大 4MB），您的檔案大小為 ${(file.size / 1024 / 1024).toFixed(2)}MB` },
+          { error: `檔案大小超過限制（最大 4.5MB），您的檔案大小為 ${(file.size / 1024 / 1024).toFixed(2)}MB。如需上傳較大檔案，請直接透過電話（04-22549828）或 Email（yunseng.design@msa.hinet.net）聯繫我們的專人服務。` },
           { status: 413 }
         );
       }
