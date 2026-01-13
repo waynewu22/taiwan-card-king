@@ -389,7 +389,7 @@ export default function HomePage() {
         </div>
 
         {/* 主要內容區域 */}
-        <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-8 sm:px-12 lg:px-16" style={{ marginTop: '-10vh' }}>
+        <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-8 sm:px-12 lg:px-16 lg:-mt-[10vh]">
           {(() => {
             // 計算滾動進度（0 到 1），基於首頁高度
             const scrollProgress = Math.min(scrollY / heroHeight, 1);
