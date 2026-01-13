@@ -2067,6 +2067,19 @@ function ContactForm() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      
+      // 檢查檔案大小（Vercel 限制為 4.5MB，我們設定為 4MB）
+      const maxFileSize = 4 * 1024 * 1024; // 4MB
+      if (file.size > maxFileSize) {
+        setErrors((prev) => ({
+          ...prev,
+          file: `檔案大小超過限制（最大 4MB），您的檔案大小為 ${(file.size / 1024 / 1024).toFixed(2)}MB`,
+        }));
+        e.target.value = "";
+        setFormData((prev) => ({ ...prev, file: null }));
+        return;
+      }
+      
       const allowedExtensions = [".ai", ".psd", ".pdf", ".jpeg", ".jpg", ".png"];
       const fileExtension = file.name
         .toLowerCase()
@@ -2186,7 +2199,9 @@ function ContactForm() {
         console.error("表單提交失敗:", response.status, errorData);
         setSubmitStatus("error");
         // 顯示具體錯誤訊息
-        if (errorData.error) {
+        if (response.status === 413) {
+          setErrors({ submit: errorData.error || "檔案大小超過限制（最大 4MB），請壓縮檔案後再試或直接透過電話/Email 與我們聯絡。" });
+        } else if (errorData.error) {
           setErrors({ submit: errorData.error });
         } else {
           setErrors({ submit: "送出失敗，請稍後再試或直接透過電話/Email 與我們聯絡。" });

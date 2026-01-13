@@ -72,6 +72,15 @@ export async function POST(request: NextRequest) {
     // 準備附件
     const attachments = [];
     if (file) {
+      // 驗證檔案大小（Vercel serverless function 限制為 4.5MB，我們設定為 4MB 以留緩衝）
+      const maxFileSize = 4 * 1024 * 1024; // 4MB
+      if (file.size > maxFileSize) {
+        return NextResponse.json(
+          { error: `檔案大小超過限制（最大 4MB），您的檔案大小為 ${(file.size / 1024 / 1024).toFixed(2)}MB` },
+          { status: 413 }
+        );
+      }
+
       // 驗證檔案格式
       const allowedExtensions = [".ai", ".psd", ".pdf", ".jpeg", ".jpg", ".png"];
       const fileExtension = file.name
