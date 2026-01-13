@@ -577,7 +577,7 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
                       rowSpan={2}
                       className="py-4 px-2 sm:py-5 sm:px-4 align-middle font-medium text-black/90 bg-black/3 border-r border-black/10"
                     >
-                      <div className="font-semibold whitespace-nowrap">
+                      <div className="font-semibold break-words lg:whitespace-nowrap">
                         {row.material === "平面卡（一級卡）" ? (
                           <span
                             className="cursor-pointer hover:text-blue-600 transition-colors"
