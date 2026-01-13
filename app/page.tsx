@@ -274,7 +274,7 @@ export default function HomePage() {
         {/* 品牌標誌 */}
         <header className="relative z-50 pt-8 sm:pt-12 lg:pt-8 lg:pl-8 xl:pl-12">
           <div className="flex items-center justify-between lg:justify-start px-4 sm:px-6 lg:px-0">
-            <div className="flex justify-center lg:justify-start flex-1 lg:flex-none">
+            <div className="flex justify-center lg:justify-start flex-1 lg:flex-none absolute left-1/2 -translate-x-1/2 lg:static lg:left-auto lg:translate-x-0">
               <img
                 src="/brand/logo.svg"
                 alt="名片王"
