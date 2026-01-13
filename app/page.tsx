@@ -224,7 +224,7 @@ export default function HomePage() {
   return (
     <main className="bg-white text-black overflow-x-hidden w-full">
       {/* Header - 固定在頂部（手機版和平板版，僅在滾動時） */}
-      <header className={`${isHeaderFixed ? 'fixed' : 'absolute'} lg:relative top-0 left-0 right-0 z-50 py-4 sm:py-6 lg:pt-8 lg:pb-8 lg:pl-8 xl:pl-12 ${isHeaderFixed ? 'bg-white/60 backdrop-blur-md shadow-sm' : 'bg-transparent'} lg:bg-transparent transition-all duration-300`}>
+      <header className={`${isHeaderFixed ? 'fixed' : 'absolute'} lg:relative top-0 left-0 right-0 z-50 py-4 sm:py-6 lg:pt-8 lg:pb-8 lg:pl-8 xl:pl-12 ${isHeaderFixed ? 'bg-white/60 backdrop-blur-md shadow-sm' : 'bg-transparent'} lg:!bg-transparent lg:!backdrop-blur-none lg:!shadow-none transition-all duration-300`}>
         <div className="flex items-center justify-between lg:justify-start px-4 sm:px-6 lg:px-0 h-full">
           <div className="flex justify-center lg:justify-start flex-1 lg:flex-none absolute left-1/2 -translate-x-1/2 lg:static lg:left-auto lg:translate-x-0">
             <img
@@ -1207,7 +1207,6 @@ function PriceCalculator() {
     printType: false,
     quantity: false,
     price: false,
-    days: false,
   });
 
   // 檢查材質是否只支援雙面印刷
@@ -1251,7 +1250,7 @@ function PriceCalculator() {
   const materialOptions = React.useMemo(() => {
     if (service === "A4 DM") {
       return getDMMaterialOptions();
-    } else if (service === "厚棉卡") {
+    } else if (service === "厚棉卡/黑卡") {
       return getThickCottonCardMaterialOptions();
     } else {
       return getCardMaterialOptions();
@@ -1265,7 +1264,7 @@ function PriceCalculator() {
       if (!materialOptions.includes(material)) {
         if (service === "A4 DM") {
           setMaterial(materialOptions[0]);
-        } else if (service === "厚棉卡") {
+        } else if (service === "厚棉卡/黑卡") {
           setMaterial(materialOptions[0]);
         } else {
           // 彩色名片：優先選擇包含"頂級象牙"的材質
@@ -1281,7 +1280,7 @@ function PriceCalculator() {
     if (!material && materialOptions.length > 0) {
       if (service === "A4 DM") {
         setMaterial(materialOptions[0]);
-      } else if (service === "厚棉卡") {
+      } else if (service === "厚棉卡/黑卡") {
         setMaterial(materialOptions[0]);
       } else {
         // 彩色名片：優先選擇包含"頂級象牙"的材質
@@ -1349,7 +1348,7 @@ function PriceCalculator() {
           }
         }
       }
-    } else if (service === "厚棉卡") {
+    } else if (service === "厚棉卡/黑卡") {
       // 厚棉卡價格計算
       // 厚棉卡的數量單位是張，但價格表使用盒（1盒=100張）
       const materialData = THICK_COTTON_CARD_DATA.find((item) => {
@@ -1446,7 +1445,6 @@ function PriceCalculator() {
         printType: false,
         quantity: false,
         price: false,
-        days: false,
       });
 
       // 逐行顯示動畫（降低速度增加質感）
@@ -1454,7 +1452,6 @@ function PriceCalculator() {
       const timer2 = setTimeout(() => setShowLines(prev => ({ ...prev, printType: true })), 500);
       const timer3 = setTimeout(() => setShowLines(prev => ({ ...prev, quantity: true })), 800);
       const timer4 = setTimeout(() => setShowLines(prev => ({ ...prev, price: true })), 1100);
-      const timer5 = setTimeout(() => setShowLines(prev => ({ ...prev, days: true })), 1400);
 
       // 數字遞增動畫（降低速度增加質感）
       if (price > 0) {
@@ -1492,7 +1489,6 @@ function PriceCalculator() {
         clearTimeout(timer2);
         clearTimeout(timer3);
         clearTimeout(timer4);
-        clearTimeout(timer5);
       };
     }
   }, [showPriceResult, price]);
@@ -1565,7 +1561,7 @@ function PriceCalculator() {
       
       // 如果找不到DM材質數據，返回空陣列
       return [];
-    } else if (service === "厚棉卡") {
+    } else if (service === "厚棉卡/黑卡") {
       // 厚棉卡：根據選擇的材質動態生成數量選項
       if (!material) {
         return [];
@@ -1699,7 +1695,7 @@ function PriceCalculator() {
   }, [service, material, printType, quantityOptions, quantity]);
 
   // 價格試算表的服務項目選項
-  const calculatorServices = ["彩色名片", "A4 DM", "厚棉卡"];
+  const calculatorServices = ["彩色名片", "A4 DM", "厚棉卡/黑卡"];
 
   return (
     <div className="bg-gray-200 rounded-lg p-6 lg:p-8">
@@ -1792,7 +1788,7 @@ function PriceCalculator() {
           ) : (
             <div className="text-black text-right w-full space-y-3">
               <div 
-                className={`text-sm transition-all duration-700 ease-out ${
+                className={`text-base font-bold transition-all duration-700 ease-out ${
                   showLines.material 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-4'
@@ -1818,23 +1814,19 @@ function PriceCalculator() {
               >
                 {quantity}
               </div>
+              <hr className="border-t border-black/20 my-3" />
               <div 
-                className={`text-2xl font-bold transition-all duration-700 ease-out ${
+                className={`transition-all duration-700 ease-out ${
                   showLines.price 
                     ? 'opacity-100 translate-y-0' 
                     : 'opacity-0 translate-y-4'
                 }`}
               >
-                金額 {animatedPrice.toLocaleString()}
-              </div>
-              <div 
-                className={`text-xs text-black/70 transition-all duration-700 ease-out ${
-                  showLines.days 
-                    ? 'opacity-100 translate-y-0' 
-                    : 'opacity-0 translate-y-4'
-                }`}
-              >
-                預計印刷天數2-3日
+                <span className="text-2xl font-bold text-black/30">預估印刷</span>
+                <span className="text-2xl font-bold">金額</span>{" "}
+                <span className="text-2xl font-bold" style={{ color: "rgb(255, 127, 127)" }}>
+                  {animatedPrice.toLocaleString()}
+                </span>
               </div>
             </div>
           )}
