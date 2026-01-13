@@ -24,6 +24,9 @@ export const metadata: Metadata = {
     template: "%s｜台灣名片王",
   },
   description: "20 年專業印刷經驗，提供名片、平面設計與各式印刷服務",
+  icons: {
+    icon: "/brand/s_logo-01.svg",
+  },
 };
 
 export default function RootLayout({
