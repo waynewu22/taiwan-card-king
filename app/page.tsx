@@ -511,7 +511,7 @@ export default function HomePage() {
                         transform: expandedCardIndex === null ? 'translateY(0)' : 'translateY(-10px)'
                       }}
                     >
-                      北屯巷弄內
+                      2000年
                     </h4>
                   )}
                 </div>
@@ -588,7 +588,7 @@ export default function HomePage() {
                         transform: expandedCardIndex === null ? 'translateY(0)' : 'translateY(-10px)'
                       }}
                     >
-                      實體門市
+                      2005年
                     </h4>
                   )}
                 </div>
@@ -654,7 +654,7 @@ export default function HomePage() {
                       <h4 className="text-xs font-bold text-white uppercase whitespace-nowrap">建立網站及公版</h4>
                       <p className="text-xs text-white/70">提供超過200種以上不同名片公版</p>
                       <p className="text-xs text-white/80 leading-relaxed">
-                        2007年，名片王第一代網站正式上線，為全台第一家提供線上公版服務的平面設計公司，讓顧客可以快速選擇想要的版型並專人服務套版，且免收設計費，落實平價與快速的企業理念。
+                        2007年名片王第一代網站上線，成為全台首家提供線上公版套版服務的平面設計品牌。
                       </p>
                     </div>
                   ) : (
@@ -665,7 +665,7 @@ export default function HomePage() {
                         transform: expandedCardIndex === null ? 'translateY(0)' : 'translateY(-10px)'
                       }}
                     >
-                      建立網站及公版
+                      2007年
                     </h4>
                   )}
                 </div>
@@ -683,7 +683,7 @@ export default function HomePage() {
 
                   {/* 描述文字 */}
                   <p className="relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow">
-                    2007年，名片王第一代網站正式上線，為全台第一家提供線上公版服務的平面設計公司，讓顧客可以快速選擇想要的版型並專人服務套版，且免收設計費，落實平價與快速的企業理念。
+                    2007年名片王第一代網站上線，成為全台首家提供線上公版套版服務的平面設計品牌。
                   </p>
 
                 </div>
@@ -731,7 +731,7 @@ export default function HomePage() {
                       <h4 className="text-xs font-bold text-white uppercase whitespace-nowrap">全線上服務</h4>
                       <p className="text-xs text-white/70">結束實體店面服務</p>
                       <p className="text-xs text-white/80 leading-relaxed">
-                        2023年，因應網路技術以及線下物流網路的進步，我們結束實體店面服務更專注於線上服務以及印刷成品把關，雖然少了與我們面對面溝通的機會，但我們與客戶的對話將更加迅速且效率。
+                        2023年隨著網路與物流成熟，名片王結束實體門市，轉向線上服務，讓與客戶的溝通更即時、製作品質更專注。
                       </p>
                     </div>
                   ) : (
@@ -742,7 +742,7 @@ export default function HomePage() {
                         transform: expandedCardIndex === null ? 'translateY(0)' : 'translateY(-10px)'
                       }}
                     >
-                      全線上服務
+                      2023年
                     </h4>
                   )}
                 </div>
@@ -760,7 +760,7 @@ export default function HomePage() {
 
                   {/* 描述文字 */}
                   <p className="relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow">
-                    2023年，因應網路技術以及線下物流網路的進步，我們結束實體店面服務更專注於線上服務以及印刷成品把關，雖然少了與我們面對面溝通的機會，但我們與客戶的對話將更加迅速且效率。
+                    2023年隨著網路與物流成熟，名片王結束實體門市，轉向線上服務，讓與客戶的溝通更即時、製作品質更專注。
                   </p>
 
                 </div>
