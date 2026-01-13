@@ -154,7 +154,30 @@ export default function PricingPage() {
   const [isContentVisible, setIsContentVisible] = useState(true);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState<boolean>(false);
   const [currentVideoSrc, setCurrentVideoSrc] = useState<string>("/flat.mp4");
+  const [scrollY, setScrollY] = useState(0);
+  const [isHeaderFixed, setIsHeaderFixed] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  // 滾動監聽
+  useEffect(() => {
+    let ticking = false;
+    
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          setScrollY(currentScrollY);
+          // 當滾動超過 100px 時，固定 header（僅手機版和平板版）
+          setIsHeaderFixed(currentScrollY > 100);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // 當 modal 打開時，重置並播放影片
   useEffect(() => {
@@ -195,10 +218,10 @@ export default function PricingPage() {
 
 
   return (
-    <main className="bg-white text-black min-h-screen">
-      {/* Header */}
-      <header className="relative z-50 pt-8 sm:pt-12 lg:pt-8 lg:pl-8 xl:pl-12">
-        <div className="flex items-center justify-between lg:justify-start px-4 sm:px-6 lg:px-0">
+    <main className="bg-white text-black min-h-screen relative">
+      {/* Header - 固定在頂部（手機版和平板版，僅在滾動時） */}
+      <header className={`${isHeaderFixed ? 'fixed' : 'sticky'} lg:relative top-0 left-0 right-0 z-50 py-4 sm:py-6 lg:pt-8 lg:pb-8 lg:pl-8 xl:pl-12 ${isHeaderFixed ? 'bg-white/60 backdrop-blur-md shadow-sm' : 'bg-white lg:bg-transparent'} lg:bg-transparent transition-all duration-300`}>
+        <div className="flex items-center justify-between lg:justify-start px-4 sm:px-6 lg:px-0 h-full">
           <div className="flex justify-center lg:justify-start flex-1 lg:flex-none absolute left-1/2 -translate-x-1/2 lg:static lg:left-auto lg:translate-x-0">
             <Link href="/">
               <img
@@ -269,9 +292,14 @@ export default function PricingPage() {
         </div>
 
         {/* 手機和平板版本的導航菜單 */}
-        {isMenuOpen && (
-          <nav className="lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg z-[60] mt-2 border-t border-black/10">
-            <div className="flex flex-col px-4 py-4">
+        <nav 
+          className={`lg:hidden absolute top-full left-0 right-0 bg-white shadow-lg z-[60] mt-2 overflow-hidden transition-all duration-500 ease-out border-t border-black/10 ${
+            isMenuOpen 
+              ? 'opacity-100 translate-y-0 max-h-96' 
+              : 'opacity-0 -translate-y-4 max-h-0 pointer-events-none'
+          }`}
+        >
+          <div className="flex flex-col px-4 py-4">
               {NAV.map((item) => (
                 item.href.startsWith('/#') ? (
                   <a
@@ -295,13 +323,12 @@ export default function PricingPage() {
                   </Link>
                 )
               ))}
-            </div>
-          </nav>
-        )}
+          </div>
+        </nav>
       </header>
 
       {/* 標籤切換 */}
-      <section className="py-8 px-6 border-b border-black/10">
+      <section className={`py-8 px-6 border-b border-black/10 ${isHeaderFixed ? 'lg:pt-8 pt-24 sm:pt-28' : ''}`}>
         <div className="max-w-7xl mx-auto">
           {/* 標籤切換 */}
           <div className="flex justify-start gap-4">
