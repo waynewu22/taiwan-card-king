@@ -842,11 +842,11 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
             </thead>
             <colgroup>
               <col className="w-[35%]" />
-              <col className="w-[10%]" />
-              <col className="w-[13.75%]" />
-              <col className="w-[13.75%]" />
-              <col className="w-[13.75%]" />
-              <col className="w-[13.75%]" />
+              <col className="w-[12%]" />
+              <col className="w-[13.25%]" />
+              <col className="w-[13.25%]" />
+              <col className="w-[13.25%]" />
+              <col className="w-[13.25%]" />
             </colgroup>
             <tbody>
               {COMMON_PAPER_DATA_DETAILED.map((row, idx) => {
@@ -959,7 +959,7 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
                             ))}
                           </div>
                         </td>
-                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600">
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600 align-middle min-h-[60px]">
                           單面
                         </td>
                         <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
@@ -1039,7 +1039,7 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
                             </div>
                           </td>
                         )}
-                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600 bg-gray-300">
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600 bg-gray-300 align-middle min-h-[60px]">
                           雙面
                         </td>
                         <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
@@ -1297,7 +1297,7 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
                             </div>
                           </td>
                         )}
-                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600 bg-gray-300">
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600 bg-gray-300 align-middle min-h-[60px]">
                           雙面
                         </td>
                         <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
@@ -1353,10 +1353,10 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
               </thead>
               <colgroup>
                 <col className="w-[35%]" />
-                <col className="w-[10%]" />
-                <col className="w-[18.33%]" />
-                <col className="w-[18.33%]" />
-                <col className="w-[18.33%]" />
+                <col className="w-[12%]" />
+                <col className="w-[17.67%]" />
+                <col className="w-[17.67%]" />
+                <col className="w-[17.67%]" />
               </colgroup>
               <tbody>
                 {DELUXE_PAPER_DATA_2_DETAILED.map((row, idx) => {
