@@ -1429,7 +1429,7 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
                               >
                                 {row.material}
                               </div>
-                              {row.description.length > 0 && row.description.map((desc, i) => (
+                              {row.description.length > 0 && row.description.map((desc: string, i: number) => (
                                 <div key={i} className="text-gray-600 text-xs sm:text-sm">
                                   {desc}
                                 </div>
@@ -1505,7 +1505,7 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
                                 >
                                   {row.material}
                                 </div>
-                                {row.description.length > 0 && row.description.map((desc, i) => (
+                                {row.description.length > 0 && row.description.map((desc: string, i: number) => (
                                   <div key={i} className="text-gray-600 text-xs sm:text-sm">
                                     {desc}
                                   </div>
@@ -1984,7 +1984,7 @@ function ProcessingSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc?:
                           <div className="text-black text-lg sm:text-xl font-bold break-words">
                             {row.material}
                           </div>
-                          {row.description.length > 0 && row.description.map((desc, i) => (
+                          {row.description.length > 0 && row.description.map((desc: string, i: number) => (
                             <div key={i} className="text-gray-600 text-xs sm:text-sm">
                               {desc}
                             </div>
@@ -2046,7 +2046,7 @@ function ProcessingSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc?:
                         <div className="text-black text-lg sm:text-xl font-bold break-words">
                           {row.material}
                         </div>
-                        {row.description.length > 0 && row.description.map((desc, i) => (
+                        {row.description.length > 0 && row.description.map((desc: string, i: number) => (
                           <div key={i} className="text-gray-600 text-xs sm:text-sm">
                             {desc}
                           </div>
@@ -2102,7 +2102,7 @@ function ProcessingSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc?:
                         <div className="text-black text-lg sm:text-xl font-bold break-words">
                           {row.material}
                         </div>
-                        {row.description.length > 0 && row.description.map((desc, i) => (
+                        {row.description.length > 0 && row.description.map((desc: string, i: number) => (
                           <div key={i} className="text-gray-600 text-xs sm:text-sm">
                             {desc}
                           </div>
@@ -2274,7 +2274,7 @@ function ProcessingSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc?:
                               <div className="text-black text-lg sm:text-xl font-bold break-words">
                                 {row.material}
                               </div>
-                              {row.description.length > 0 && row.description.map((desc, i) => (
+                              {row.description.length > 0 && row.description.map((desc: string, i: number) => (
                                 <div key={i} className="text-gray-600 text-xs sm:text-sm">
                                   {desc}
                                 </div>
