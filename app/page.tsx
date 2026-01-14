@@ -1115,11 +1115,6 @@ const THICK_COTTON_CARD_DATA = [
     single: { "3": 2350, "4": 2650, "5": 2950 },
     double: { "3": 2900, "4": 3200, "5": 3500 },
   },
-  {
-    material: "雷射雕刻請洽服務人員",
-    single: { "3": null, "4": null, "5": null },
-    double: { "3": null, "4": null, "5": null },
-  },
 ];
 
 // 價格試算表組件
@@ -1227,10 +1222,7 @@ function PriceCalculator() {
     const materials: string[] = [];
     
     THICK_COTTON_CARD_DATA.forEach((item) => {
-      // 排除「雷射雕刻請洽服務人員」這種特殊選項
-      if (item.material !== "雷射雕刻請洽服務人員") {
-        materials.push(item.material);
-      }
+      materials.push(item.material);
     });
     
     return materials;

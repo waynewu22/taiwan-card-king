@@ -10,7 +10,79 @@ const NAV = [
   { id: "contact", label: "聯絡我們", href: "/#contact" },
 ] as const;
 
-// 價格表數據
+// 價格表數據 - 重新組織為包含描述和規格的結構
+const COMMON_PAPER_DATA_DETAILED = [
+  {
+    material: "平面卡",
+    description: ["紙面平滑色彩飽滿", "價格最實惠的紙材"],
+    spec: "250μm",
+    single: { "200": null, "300": 250, "500": 295, "1000": 390 },
+    double: { "200": null, "300": 350, "500": 480, "1000": 659 },
+    video: "/flat.mp4",
+  },
+  {
+    material: "萊妮紙",
+    description: ["表面有十字壓紋", "具有文藝質感的紙類"],
+    spec: "300μm±20μm",
+    single: { "200": 300, "300": 420, "500": 470, "1000": 750 },
+    double: null,
+    video: "/leni.mp4",
+  },
+  {
+    material: "安格紙",
+    description: ["表面有方格狀紋路", "具有的光澤感的紙類"],
+    spec: "300g",
+    single: null,
+    double: null,
+    video: "/ange.mp4",
+    isCombinedWithPrevious: true, // 與萊妮紙合併顯示
+  },
+  {
+    material: "合成紙",
+    description: ["又稱為撕不破", "具有微防水非常耐用"],
+    spec: "200g",
+    single: null,
+    double: { "200": 400, "300": 500, "500": 630, "1000": 850 },
+    video: "/synthetic.mp4",
+    isCombinedWithPrevious: true, // 與萊妮紙合併顯示
+  },
+  {
+    material: "象牙紙",
+    description: ["紙張呈現柔白色", "表面有纖維質感"],
+    spec: "250g",
+    single: null,
+    double: null,
+    video: "/Ivory.mp4",
+    isCombinedWithPrevious: true, // 與萊妮紙合併顯示
+  },
+  {
+    material: "雙上霧P",
+    description: ["霧膜質感", "防水防髒 硬挺度佳"],
+    spec: null,
+    single: { "200": 360, "300": 450, "500": 530, "1000": 830 },
+    double: null,
+    video: "/matt.mp4",
+  },
+  {
+    material: "雙上亮P",
+    description: ["亮膜質感", "防水防髒 硬挺度佳"],
+    spec: null,
+    single: null,
+    double: { "200": 490, "300": 590, "500": 730, "1000": 950 },
+    video: "/clear.mp4",
+    isCombinedWithPrevious: true, // 與雙上霧P合併顯示
+  },
+  {
+    material: "局部上光",
+    description: ["凸顯局部亮的效果", "(單面局部光)", "增加局部立體感"],
+    spec: null,
+    single: { "200": 430, "300": 490, "500": 650, "1000": 1150 },
+    double: { "200": 530, "300": 640, "500": 800, "1000": 1350 },
+    video: "/spot_uv.mp4",
+  },
+];
+
+// 保留舊的數據結構以向後兼容（用於其他表格）
 const COMMON_PAPER_DATA = [
   {
     material: "平面卡（一級卡）",
@@ -34,6 +106,28 @@ const COMMON_PAPER_DATA = [
   },
 ];
 
+// 精緻紙材數據 - 重新組織為包含描述和規格的結構（第一組：200/300/500/1000張）
+const DELUXE_PAPER_DATA_1_DETAILED = [
+  {
+    material: "星幻紙",
+    description: ["奢華珍珠光澤", "呈現炫亮金屬質感"],
+    spec: null,
+    single: { "200": 540, "300": 640, "500": 750, "1000": 1250 },
+    double: null,
+    video: "/Pearlescent.mp4",
+  },
+  {
+    material: "立體銀",
+    description: ["單面局部銀蔥加工", "具有浮凸粗糙的觸感"],
+    spec: null,
+    single: null,
+    double: { "200": 650, "300": 790, "500": 900, "1000": 1490 },
+    video: null,
+    isCombinedWithPrevious: true, // 與星幻紙合併顯示
+  },
+];
+
+// 保留舊的數據結構以向後兼容
 const DELUXE_PAPER_DATA_1 = [
   {
     material: "星幻紙 / 立體銀",
@@ -42,6 +136,97 @@ const DELUXE_PAPER_DATA_1 = [
   },
 ];
 
+// 精緻紙材數據 - 重新組織為包含描述和規格的結構（第二組：250/500/1000張）
+const DELUXE_PAPER_DATA_2_DETAILED = [
+  {
+    material: "頂級卡",
+    description: ["加厚版本的平面卡", "平滑細緻不反光"],
+    spec: null,
+    single: { "250": 400, "500": 480, "1000": 780 },
+    double: null,
+    video: null,
+  },
+  {
+    material: "細紋紙",
+    description: ["不規則細沙狀的壓紋", "細緻樸實、乾淨"],
+    spec: "220g",
+    single: null,
+    double: { "250": 500, "500": 650, "1000": 930 },
+    video: "/Canvas_2.mp4",
+    isCombinedWithPrevious: true, // 與頂級卡合併顯示
+  },
+  {
+    material: "細波紙",
+    description: ["岩石般紋路", "紙張觸感紮實"],
+    spec: "250g",
+    single: null,
+    double: null,
+    video: null,
+  },
+  {
+    material: "頂級雙上霧",
+    description: ["頂級卡加雙面上霧P", "須以雙面計價"],
+    spec: null,
+    single: { "250": 550, "500": 750, "1000": 1150 },
+    double: null,
+    video: null,
+    isCombinedWithPrevious: true, // 與細波紙合併顯示
+  },
+  {
+    material: "炫光紙",
+    description: ["左右搖會帶黃光", "呈現銀色金屬光澤"],
+    spec: "250g",
+    single: null,
+    double: { "250": 690, "500": 900, "1000": 1350 },
+    video: null,
+    isCombinedWithPrevious: true, // 與細波紙合併顯示
+  },
+  {
+    material: "絲絨卡",
+    description: ["表面展現絲絨般觸感", "呈現奢華細緻感"],
+    spec: null,
+    single: null,
+    double: null,
+    video: "/Velvet.mp4",
+  },
+  {
+    material: "頂級象牙",
+    description: ["厚度420µm", "紙色呈柔合米白色"],
+    spec: null,
+    single: { "250": 580, "500": 790, "1000": 1300 },
+    double: null,
+    video: "/Premium_Ivory.mp4",
+    isCombinedWithPrevious: true, // 與絲絨卡合併顯示
+  },
+  {
+    material: "局部上光",
+    description: ["(雙面局部光)", "增加局部立體感", "須以雙面計價"],
+    spec: null,
+    single: null,
+    double: { "250": 730, "500": 930, "1000": 1580 },
+    video: "/spot_uv.mp4",
+    isCombinedWithPrevious: true, // 與絲絨卡合併顯示
+  },
+  {
+    material: "永采紙/瑞典一級卡/銀箔卡/磨砂卡",
+    description: [],
+    spec: null,
+    single: null,
+    double: null,
+    video: null,
+    isCombinedWithPrevious: true, // 與絲絨卡合併顯示
+  },
+  {
+    material: "柳葉紙/爵士紙/絲絨局部上光/霧透卡/全透卡(最少五盒)/磨砂冷燙卡(以雙面計價)",
+    description: [],
+    spec: null,
+    single: { "250": 790, "500": 1250, "1000": 1800 },
+    double: { "250": 980, "500": 1550, "1000": 2400 },
+    video: "/jazz.mp4",
+  },
+];
+
+// 保留舊的數據結構以向後兼容
 const DELUXE_PAPER_DATA_2 = [
   {
     material: "頂級卡（平面） / 細紋紙",
@@ -139,12 +324,80 @@ const THICK_COTTON_CARD_DATA = [
     single: { "3": 2350, "4": 2650, "5": 2950 },
     double: { "3": 2900, "4": 3200, "5": 3500 },
   },
+];
+
+// 其他加工項目價格表數據
+// 第一區塊：壓線、切圓角、打孔
+const PROCESSING_GROUP_1 = [
   {
-    material: "雷射雕刻請洽服務人員",
-    single: { "3": null, "4": null, "5": null },
-    double: { "3": null, "4": null, "5": null },
+    material: "壓線",
+    description: ["最小尺寸:80x80MM"],
+    baseFee: 300,
+    per100Sheets: 40,
+    combinedItems: ["切圓角", "打孔"],
   },
 ];
+
+// 第二區塊：流水號(燙金)
+const PROCESSING_GROUP_2 = [
+  {
+    material: "流水號(燙金)",
+    description: [],
+    baseFee: 600,
+    perSheet: 2,
+  },
+];
+
+// 第三區塊：軋型費
+const PROCESSING_GROUP_3 = [
+  {
+    material: "軋型費(刀模費另計)",
+    description: [],
+    within1000: 1500,
+    within2000: 2600,
+  },
+];
+
+// 第四區塊：燙金
+const PROCESSING_GROUP_4 = [
+  {
+    size: "2cm以內",
+    plateFee: 200,
+    baseFee: 600,
+    perSheet: 2,
+  },
+  {
+    size: "2-3cm",
+    plateFee: 300,
+    baseFee: 750,
+    perSheet: 3.5,
+  },
+  {
+    size: "3-5cm",
+    plateFee: 450,
+    baseFee: 900,
+    perSheet: 4.5,
+  },
+];
+
+// 第五區塊：打凸
+const PROCESSING_GROUP_5 = [
+  {
+    size: "3cm以內",
+    plateFee: 400,
+    baseFee: 750,
+    perSheet: 2.5,
+  },
+  {
+    size: "3-5cm",
+    plateFee: 600,
+    baseFee: 950,
+    perSheet: 4.5,
+  },
+];
+
+// 其他項目
+const OTHER_PROCESSING_DATA: any[] = [];
 
 type TabType = "名片" | "加工" | "DM海報";
 
@@ -556,532 +809,768 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
   return (
     <div className="space-y-16">
       {/* 常用紙材 */}
-      <div>
-        <h3 className="text-2xl font-light tracking-wide mb-6 text-black/90">
-          常用紙材
-        </h3>
-        <div>
-          <table className="w-full border-collapse text-xs sm:text-sm table-fixed">
-            <colgroup>
-              <col className="w-[40%]" />
-              <col className="w-[12%]" />
-              <col className="w-[12%]" />
-              <col className="w-[12%]" />
-              <col className="w-[12%]" />
-              <col className="w-[12%]" />
-            </colgroup>
+      <div className="relative">
+        <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+          <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
             <thead>
-              <tr className="border-b-2 border-black/30">
-                <th className="text-left py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  紙材
+              {/* 標題和數量標頭 - 同一行 */}
+              <tr>
+                <th colSpan={2} className="p-0 border-b border-gray-600">
+                  <div className="py-3 px-4 text-left">
+                    <h3 className="text-2xl font-bold text-black">
+                      常用紙材
+                    </h3>
+                  </div>
                 </th>
-                <th className="text-left py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  印刷
-                </th>
-                <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  2盒
-                  <br />
-                  200張
-                </th>
-                <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  3盒
-                  <br />
-                  300張
-                </th>
-                <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  5盒
-                  <br />
-                  500張
-                </th>
-                <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  10盒
-                  <br />
-                  1000張
+                <th colSpan={4} className="p-0 border-b border-gray-600">
+                  <div className="flex gap-0">
+                    <div className="flex-1 text-center py-3 px-2">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>200張</span>
+                    </div>
+                    <div className="flex-1 text-center py-3 px-2">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>300張</span>
+                    </div>
+                    <div className="flex-1 text-center py-3 px-2">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>500張</span>
+                    </div>
+                    <div className="flex-1 text-center py-3 px-2">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>1000張</span>
+                    </div>
+                  </div>
                 </th>
               </tr>
             </thead>
+            <colgroup>
+              <col className="w-[35%]" />
+              <col className="w-[10%]" />
+              <col className="w-[13.75%]" />
+              <col className="w-[13.75%]" />
+              <col className="w-[13.75%]" />
+              <col className="w-[13.75%]" />
+            </colgroup>
             <tbody>
-              {COMMON_PAPER_DATA.map((row, idx) => (
-                <React.Fragment key={idx}>
-                  <tr className="border-b border-black/10 hover:bg-black/2">
-                    <td
-                      rowSpan={2}
-                      className="py-4 px-2 sm:py-5 sm:px-4 align-middle font-medium text-black/90 bg-black/3 border-r border-black/10"
-                    >
-                      <div className="font-semibold break-words lg:whitespace-nowrap">
-                        {row.material === "平面卡（一級卡）" ? (
-                          <span
-                            className="cursor-pointer hover:text-blue-600 transition-colors"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              console.log("Click detected on 平面卡（一級卡）");
-                              if (onOpenVideoModal) {
-                                onOpenVideoModal("/flat.mp4");
-                              }
-                            }}
-                            role="button"
-                            tabIndex={0}
+              {COMMON_PAPER_DATA_DETAILED.map((row, idx) => {
+                // 跳過需要與前一個項目合併的項目
+                if ((row as any).isCombinedWithPrevious) {
+                  return null;
+                }
+                
+                const hasSingle = row.single !== null;
+                const hasDouble = row.double !== null;
+                
+                // 收集所有後續需要合併的項目
+                const combinedRows: typeof row[] = [];
+                let nextIdx = idx + 1;
+                while (nextIdx < COMMON_PAPER_DATA_DETAILED.length) {
+                  const nextRow = COMMON_PAPER_DATA_DETAILED[nextIdx];
+                  if ((nextRow as any).isCombinedWithPrevious) {
+                    combinedRows.push(nextRow);
+                    nextIdx++;
+                  } else {
+                    break;
+                  }
+                }
+                
+                // 從合併項目中提取 single 和 double
+                let combinedSingle = null;
+                let combinedDouble = null;
+                combinedRows.forEach(combinedRow => {
+                  if (combinedRow.single) {
+                    combinedSingle = combinedRow.single;
+                  }
+                  if (combinedRow.double) {
+                    combinedDouble = combinedRow.double;
+                  }
+                });
+                
+                // 確定最終的 single 和 double
+                const finalSingle = hasSingle ? row.single : combinedSingle;
+                const finalDouble = hasDouble ? row.double : combinedDouble;
+                const finalHasSingle = finalSingle !== null;
+                const finalHasDouble = finalDouble !== null;
+                
+                const rowSpan = (finalHasSingle && finalHasDouble) ? 2 : 1;
+                
+                // 如果有合併項目或者主項目有價格，才渲染
+                if (!finalHasSingle && !finalHasDouble) {
+                  return null;
+                }
+                
+                return (
+                  <React.Fragment key={idx}>
+                    {finalHasSingle && (
+                      <tr className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
+                        <td
+                          rowSpan={rowSpan}
+                          className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600"
+                        >
+                          <div className="space-y-1">
+                            <div
+                              className="text-black text-lg sm:text-xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                              onClick={(e) => {
+                                if (row.video && onOpenVideoModal) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  onOpenVideoModal(row.video);
+                                }
+                              }}
+                              role={row.video ? "button" : undefined}
+                              tabIndex={row.video ? 0 : undefined}
+                            >
+                              {row.material}
+                            </div>
+                            {row.description.map((desc, i) => (
+                              <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                                {desc}
+                              </div>
+                            ))}
+                            {row.spec && (
+                              <div className="text-gray-600 text-xs sm:text-sm">
+                                {row.spec}
+                              </div>
+                            )}
+                            {/* 顯示所有合併項目的信息 */}
+                            {combinedRows.map((combinedRow, combinedIdx) => (
+                              <React.Fragment key={combinedIdx}>
+                                <div className="text-black text-lg sm:text-xl font-bold mt-2 cursor-pointer hover:opacity-80 transition-opacity"
+                                  onClick={(e) => {
+                                    if (combinedRow.video && onOpenVideoModal) {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      onOpenVideoModal(combinedRow.video);
+                                    }
+                                  }}
+                                  role={combinedRow.video ? "button" : undefined}
+                                  tabIndex={combinedRow.video ? 0 : undefined}
+                                >
+                                  {combinedRow.material}
+                                </div>
+                                {combinedRow.description.map((desc, i) => (
+                                  <div key={`combined-${combinedIdx}-${i}`} className="text-gray-600 text-xs sm:text-sm">
+                                    {desc}
+                                  </div>
+                                ))}
+                                {combinedRow.spec && (
+                                  <div className="text-gray-600 text-xs sm:text-sm">
+                                    {combinedRow.spec}
+                                  </div>
+                                )}
+                              </React.Fragment>
+                            ))}
+                          </div>
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600">
+                          單面
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                          {finalSingle?.["200"] ? `$${finalSingle["200"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                          {finalSingle?.["300"] ? `$${finalSingle["300"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                          {finalSingle?.["500"] ? `$${finalSingle["500"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                          {finalSingle?.["1000"] ? `$${finalSingle["1000"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                      </tr>
+                    )}
+                    {finalHasDouble && (
+                      <tr className={`border-b border-gray-600 ${idx === 0 && !finalHasSingle ? 'border-t border-gray-600' : ''}`}>
+                        {!finalHasSingle && (
+                          <td
+                            rowSpan={1}
+                            className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600"
                           >
-                            {row.material}
-                          </span>
-                        ) : row.material === "萊妮紙 / 合成紙 / 象牙紙 / 安格紙" ? (
-                          <>
-                            <span
-                              className="cursor-pointer hover:text-blue-600 transition-colors"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                console.log("Click detected on 萊妮紙");
-                                if (onOpenVideoModal) {
-                                  onOpenVideoModal("/leni.mp4");
-                                }
-                              }}
-                              role="button"
-                              tabIndex={0}
-                            >
-                              萊妮紙
-                            </span>
-                            <span> / </span>
-                            <span
-                              className="cursor-pointer hover:text-blue-600 transition-colors"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                console.log("Click detected on 合成紙");
-                                if (onOpenVideoModal) {
-                                  onOpenVideoModal("/synthetic.mp4");
-                                }
-                              }}
-                              role="button"
-                              tabIndex={0}
-                            >
-                              合成紙
-                            </span>
-                            <span> / </span>
-                            <span
-                              className="cursor-pointer hover:text-blue-600 transition-colors"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                console.log("Click detected on 象牙紙");
-                                if (onOpenVideoModal) {
-                                  onOpenVideoModal("/Ivory.mp4");
-                                }
-                              }}
-                              role="button"
-                              tabIndex={0}
-                            >
-                              象牙紙
-                            </span>
-                            <span> / </span>
-                            <span
-                              className="cursor-pointer hover:text-blue-600 transition-colors"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                console.log("Click detected on 安格紙");
-                                if (onOpenVideoModal) {
-                                  onOpenVideoModal("/ange.mp4");
-                                }
-                              }}
-                              role="button"
-                              tabIndex={0}
-                            >
-                              安格紙
-                            </span>
-                          </>
-                        ) : row.material === "雙上霧P / 雙上亮P" ? (
-                          <>
-                            <span
-                              className="cursor-pointer hover:text-blue-600 transition-colors"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                console.log("Click detected on 雙上霧P");
-                                if (onOpenVideoModal) {
-                                  onOpenVideoModal("/matt.mp4");
-                                }
-                              }}
-                              role="button"
-                              tabIndex={0}
-                            >
-                              雙上霧P
-                            </span>
-                            <span> / </span>
-                            <span
-                              className="cursor-pointer hover:text-blue-600 transition-colors"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                console.log("Click detected on 雙上亮P");
-                                if (onOpenVideoModal) {
-                                  onOpenVideoModal("/clear.mp4");
-                                }
-                              }}
-                              role="button"
-                              tabIndex={0}
-                            >
-                              雙上亮P
-                            </span>
-                          </>
-                        ) : row.material === "局部上光（單面局部光）" ? (
-                          <span
-                            className="cursor-pointer hover:text-blue-600 transition-colors"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              console.log("Click detected on 局部上光（單面局部光）");
-                              if (onOpenVideoModal) {
-                                onOpenVideoModal("/spot_uv.mp4");
-                              }
-                            }}
-                            role="button"
-                            tabIndex={0}
-                          >
-                            {row.material}
-                          </span>
-                        ) : (
-                          <span>{row.material}</span>
+                            <div className="space-y-1">
+                              <div
+                                className="text-black text-lg sm:text-xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                                onClick={(e) => {
+                                  if (row.video && onOpenVideoModal) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    onOpenVideoModal(row.video);
+                                  }
+                                }}
+                                role={row.video ? "button" : undefined}
+                                tabIndex={row.video ? 0 : undefined}
+                              >
+                                {row.material}
+                              </div>
+                              {row.description.map((desc, i) => (
+                                <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                                  {desc}
+                                </div>
+                              ))}
+                              {row.spec && (
+                                <div className="text-gray-600 text-xs sm:text-sm">
+                                  {row.spec}
+                                </div>
+                              )}
+                              {/* 顯示所有合併項目的信息 */}
+                              {combinedRows.map((combinedRow, combinedIdx) => (
+                                <React.Fragment key={combinedIdx}>
+                                  <div className="text-black text-lg sm:text-xl font-bold mt-2 cursor-pointer hover:opacity-80 transition-opacity"
+                                    onClick={(e) => {
+                                      if (combinedRow.video && onOpenVideoModal) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        onOpenVideoModal(combinedRow.video);
+                                      }
+                                    }}
+                                    role={combinedRow.video ? "button" : undefined}
+                                    tabIndex={combinedRow.video ? 0 : undefined}
+                                  >
+                                    {combinedRow.material}
+                                  </div>
+                                  {combinedRow.description.map((desc, i) => (
+                                    <div key={`combined-${combinedIdx}-${i}`} className="text-gray-600 text-xs sm:text-sm">
+                                      {desc}
+                                    </div>
+                                  ))}
+                                  {combinedRow.spec && (
+                                    <div className="text-gray-600 text-xs sm:text-sm">
+                                      {combinedRow.spec}
+                                    </div>
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </div>
+                          </td>
                         )}
-                      </div>
-                    </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-black/80 font-medium lg:whitespace-nowrap">
-                      單面印刷
-                    </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.single["200"] ? `${row.single["200"]}` : "-"}
-                    </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.single["300"] ? `${row.single["300"]}` : "-"}
-                    </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.single["500"] ? `${row.single["500"]}` : "-"}
-                    </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.single["1000"] ? `${row.single["1000"]}` : "-"}
-                    </td>
-                  </tr>
-                  <tr className="border-b border-black/10 hover:bg-black/2">
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-black/80 font-medium lg:whitespace-nowrap">
-                      雙面印刷
-                    </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.double["200"] ? `${row.double["200"]}` : "-"}
-                    </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.double["300"] ? `${row.double["300"]}` : "-"}
-                    </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.double["500"] ? `${row.double["500"]}` : "-"}
-                    </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.double["1000"] ? `${row.double["1000"]}` : "-"}
-                    </td>
-                  </tr>
-                </React.Fragment>
-              ))}
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600 bg-gray-300">
+                          雙面
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                          {finalDouble?.["200"] ? `$${finalDouble["200"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                          {finalDouble?.["300"] ? `$${finalDouble["300"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                          {finalDouble?.["500"] ? `$${finalDouble["500"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                          {finalDouble?.["1000"] ? `$${finalDouble["1000"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
 
       {/* 精緻紙材 */}
-      <div className="flex flex-col md:flex-row gap-8 items-start">
-        <div className="flex-[2] w-full md:w-auto">
-          <h3 className="text-2xl font-light tracking-wide mb-6 text-black/90">
-            精緻紙材
-          </h3>
-
-          {/* 第一組：星幻紙 / 立體銀 */}
-          <div className="mb-12">
-            <table className="w-full border-collapse text-xs sm:text-sm table-fixed">
-              <colgroup>
-                <col className="w-[50%]" />
-                <col className="w-[10%]" />
-                <col className="w-[10%]" />
-                <col className="w-[10%]" />
-                <col className="w-[10%]" />
-                <col className="w-[10%]" />
-              </colgroup>
+      <div className="space-y-16">
+        {/* 第一組：星幻紙 / 立體銀（200/300/500/1000張） */}
+        <div className="relative">
+          <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+            <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
               <thead>
-                <tr className="border-b-2 border-black/30">
-                  <th className="text-left py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    紙材
+                {/* 標題和數量標頭 - 同一行 */}
+                <tr>
+                  <th colSpan={2} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-left">
+                      <h3 className="text-2xl font-bold text-black">
+                        精緻紙材
+                      </h3>
+                    </div>
                   </th>
-                  <th className="text-left py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    印刷
-                  </th>
-                  <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    2盒
-                    <br />
-                    200張
-                  </th>
-                  <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    3盒
-                    <br />
-                    300張
-                  </th>
-                  <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    5盒
-                    <br />
-                    500張
-                  </th>
-                  <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    10盒
-                    <br />
-                    1000張
+                  <th colSpan={4} className="p-0 border-b border-gray-600">
+                    <div className="flex gap-0">
+                      <div className="flex-1 text-center py-3 px-2">
+                        <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>200張</span>
+                      </div>
+                      <div className="flex-1 text-center py-3 px-2">
+                        <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>300張</span>
+                      </div>
+                      <div className="flex-1 text-center py-3 px-2">
+                        <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>500張</span>
+                      </div>
+                      <div className="flex-1 text-center py-3 px-2">
+                        <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>1000張</span>
+                      </div>
+                    </div>
                   </th>
                 </tr>
               </thead>
+              <colgroup>
+                <col className="w-[35%]" />
+                <col className="w-[10%]" />
+                <col className="w-[13.75%]" />
+                <col className="w-[13.75%]" />
+                <col className="w-[13.75%]" />
+                <col className="w-[13.75%]" />
+              </colgroup>
               <tbody>
-                {DELUXE_PAPER_DATA_1.map((row, idx) => (
-                  <React.Fragment key={idx}>
-                    <tr className="border-b border-black/10 hover:bg-black/2">
-                      <td
-                        rowSpan={2}
-                        className="py-4 px-2 sm:py-5 sm:px-4 align-middle font-medium text-black/90 bg-black/3 border-r border-black/10"
-                      >
-                        <div className="font-semibold break-words">
-                          {row.material === "星幻紙 / 立體銀" ? (
-                            <>
-                              <span
-                                className="cursor-pointer hover:text-blue-600 transition-colors"
+                {DELUXE_PAPER_DATA_1_DETAILED.map((row, idx) => {
+                  // 跳過需要與前一個項目合併的項目
+                  if ((row as any).isCombinedWithPrevious) {
+                    return null;
+                  }
+                  
+                  const hasSingle = row.single !== null;
+                  const hasDouble = row.double !== null;
+                  
+                  // 收集所有後續需要合併的項目
+                  const combinedRows: typeof row[] = [];
+                  let nextIdx = idx + 1;
+                  while (nextIdx < DELUXE_PAPER_DATA_1_DETAILED.length) {
+                    const nextRow = DELUXE_PAPER_DATA_1_DETAILED[nextIdx];
+                    if ((nextRow as any).isCombinedWithPrevious) {
+                      combinedRows.push(nextRow);
+                      nextIdx++;
+                    } else {
+                      break;
+                    }
+                  }
+                  
+                  // 從合併項目中提取 single 和 double
+                  let combinedSingle = null;
+                  let combinedDouble = null;
+                  combinedRows.forEach(combinedRow => {
+                    if (combinedRow.single) {
+                      combinedSingle = combinedRow.single;
+                    }
+                    if (combinedRow.double) {
+                      combinedDouble = combinedRow.double;
+                    }
+                  });
+                  
+                  // 確定最終的 single 和 double
+                  const finalSingle = hasSingle ? row.single : combinedSingle;
+                  const finalDouble = hasDouble ? row.double : combinedDouble;
+                  const finalHasSingle = finalSingle !== null;
+                  const finalHasDouble = finalDouble !== null;
+                  
+                  const rowSpan = (finalHasSingle && finalHasDouble) ? 2 : 1;
+                  
+                  // 如果有合併項目或者主項目有價格，才渲染
+                  if (!finalHasSingle && !finalHasDouble) {
+                    return null;
+                  }
+                  
+                  return (
+                    <React.Fragment key={idx}>
+                      {finalHasSingle && (
+                        <tr className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
+                          <td
+                            rowSpan={rowSpan}
+                            className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600"
+                          >
+                            <div className="space-y-1">
+                              <div
+                                className="text-black text-lg sm:text-xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                                 onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  console.log("Click detected on 星幻紙");
-                                  if (onOpenVideoModal) {
-                                    onOpenVideoModal("/Pearlescent.mp4");
+                                  if (row.video && onOpenVideoModal) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    onOpenVideoModal(row.video);
                                   }
                                 }}
-                                role="button"
-                                tabIndex={0}
+                                role={row.video ? "button" : undefined}
+                                tabIndex={row.video ? 0 : undefined}
                               >
-                                星幻紙
-                              </span>
-                              <span> / 立體銀</span>
-                            </>
-                          ) : (
-                            <span>{row.material}</span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-black/80 font-medium lg:whitespace-nowrap">
-                        單面印刷
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.single["200"] ? `${row.single["200"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.single["300"] ? `${row.single["300"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.single["500"] ? `${row.single["500"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.single["1000"] ? `${row.single["1000"]}` : "-"}
-                      </td>
-                    </tr>
-                    <tr className="border-b border-black/10 hover:bg-black/2">
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-black/80 font-medium lg:whitespace-nowrap">
-                        雙面印刷
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.double["200"] ? `${row.double["200"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.double["300"] ? `${row.double["300"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.double["500"] ? `${row.double["500"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.double["1000"] ? `${row.double["1000"]}` : "-"}
-                      </td>
-                    </tr>
+                                {row.material}
+                              </div>
+                              {row.description.map((desc, i) => (
+                                <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                                  {desc}
+                                </div>
+                              ))}
+                              {row.spec && (
+                                <div className="text-gray-600 text-xs sm:text-sm">
+                                  {row.spec}
+                                </div>
+                              )}
+                              {/* 顯示所有合併項目的信息 */}
+                              {combinedRows.map((combinedRow, combinedIdx) => (
+                                <React.Fragment key={combinedIdx}>
+                                  <div className="text-black text-lg sm:text-xl font-bold mt-2 cursor-pointer hover:opacity-80 transition-opacity"
+                                    onClick={(e) => {
+                                      if (combinedRow.video && onOpenVideoModal) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        onOpenVideoModal(combinedRow.video);
+                                      }
+                                    }}
+                                    role={combinedRow.video ? "button" : undefined}
+                                    tabIndex={combinedRow.video ? 0 : undefined}
+                                  >
+                                    {combinedRow.material}
+                                  </div>
+                                  {combinedRow.description.map((desc, i) => (
+                                    <div key={`combined-${combinedIdx}-${i}`} className="text-gray-600 text-xs sm:text-sm">
+                                      {desc}
+                                    </div>
+                                  ))}
+                                  {combinedRow.spec && (
+                                    <div className="text-gray-600 text-xs sm:text-sm">
+                                      {combinedRow.spec}
+                                    </div>
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600">
+                            單面
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                            {finalSingle?.["200"] ? `$${finalSingle["200"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                            {finalSingle?.["300"] ? `$${finalSingle["300"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                            {finalSingle?.["500"] ? `$${finalSingle["500"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                            {finalSingle?.["1000"] ? `$${finalSingle["1000"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                        </tr>
+                      )}
+                      {finalHasDouble && (
+                        <tr className={`border-b border-gray-600 ${idx === 0 && !finalHasSingle ? 'border-t border-gray-600' : ''}`}>
+                          {!finalHasSingle && (
+                            <td
+                              rowSpan={1}
+                              className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600"
+                            >
+                              <div className="space-y-1">
+                                <div
+                                  className="text-black text-lg sm:text-xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                                  onClick={(e) => {
+                                    if (row.video && onOpenVideoModal) {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      onOpenVideoModal(row.video);
+                                    }
+                                  }}
+                                  role={row.video ? "button" : undefined}
+                                  tabIndex={row.video ? 0 : undefined}
+                                >
+                                  {row.material}
+                                </div>
+                                {row.description.map((desc, i) => (
+                                  <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                                    {desc}
+                                  </div>
+                                ))}
+                                {row.spec && (
+                                  <div className="text-gray-600 text-xs sm:text-sm">
+                                    {row.spec}
+                                  </div>
+                                )}
+                                {/* 顯示所有合併項目的信息 */}
+                                {combinedRows.map((combinedRow, combinedIdx) => (
+                                  <React.Fragment key={combinedIdx}>
+                                    <div className="text-black text-lg sm:text-xl font-bold mt-2 cursor-pointer hover:opacity-80 transition-opacity"
+                                      onClick={(e) => {
+                                        if (combinedRow.video && onOpenVideoModal) {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          onOpenVideoModal(combinedRow.video);
+                                        }
+                                      }}
+                                      role={combinedRow.video ? "button" : undefined}
+                                      tabIndex={combinedRow.video ? 0 : undefined}
+                                    >
+                                      {combinedRow.material}
+                                    </div>
+                                    {combinedRow.description.map((desc, i) => (
+                                      <div key={`combined-${combinedIdx}-${i}`} className="text-gray-600 text-xs sm:text-sm">
+                                        {desc}
+                                      </div>
+                                    ))}
+                                    {combinedRow.spec && (
+                                      <div className="text-gray-600 text-xs sm:text-sm">
+                                        {combinedRow.spec}
+                                      </div>
+                                    )}
+                                  </React.Fragment>
+                                ))}
+                            </div>
+                          </td>
+                        )}
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600 bg-gray-300">
+                          雙面
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                          {finalDouble?.["200"] ? `$${finalDouble["200"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                          {finalDouble?.["300"] ? `$${finalDouble["300"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                          {finalDouble?.["500"] ? `$${finalDouble["500"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                        <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                          {finalDouble?.["1000"] ? `$${finalDouble["1000"]}` : <span className="text-gray-500">/</span>}
+                        </td>
+                      </tr>
+                    )}
                   </React.Fragment>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        </div>
 
-          {/* 第二組：其他精緻紙材 */}
-          <div>
-            <table className="w-full border-collapse text-xs sm:text-sm table-fixed">
-              <colgroup>
-                <col className="w-[50%]" />
-                <col className="w-[10%]" />
-                <col className="w-[13.33%]" />
-                <col className="w-[13.33%]" />
-                <col className="w-[13.33%]" />
-              </colgroup>
+        {/* 第二組：其他精緻紙材（250/500/1000張） */}
+        <div className="relative">
+          <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+            <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
               <thead>
-                <tr className="border-b-2 border-black/30">
-                  <th className="text-left py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    紙材
+                {/* 標題和數量標頭 - 同一行 */}
+                <tr>
+                  <th colSpan={2} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-left">
+                      <h3 className="text-2xl font-bold text-black">
+                        精緻紙材
+                      </h3>
+                    </div>
                   </th>
-                  <th className="text-left py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    印刷
-                  </th>
-                  <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    2.5盒
-                    <br />
-                    250張
-                  </th>
-                  <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    5盒
-                    <br />
-                    500張
-                  </th>
-                  <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                    10盒
-                    <br />
-                    1000張
+                  <th colSpan={3} className="p-0 border-b border-gray-600">
+                    <div className="flex gap-0">
+                      <div className="flex-1 text-center py-3 px-2">
+                        <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>250張</span>
+                      </div>
+                      <div className="flex-1 text-center py-3 px-2">
+                        <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>500張</span>
+                      </div>
+                      <div className="flex-1 text-center py-3 px-2">
+                        <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>1000張</span>
+                      </div>
+                    </div>
                   </th>
                 </tr>
               </thead>
+              <colgroup>
+                <col className="w-[35%]" />
+                <col className="w-[10%]" />
+                <col className="w-[18.33%]" />
+                <col className="w-[18.33%]" />
+                <col className="w-[18.33%]" />
+              </colgroup>
               <tbody>
-                {DELUXE_PAPER_DATA_2.map((row, idx) => (
-                  <React.Fragment key={idx}>
-                    <tr className="border-b border-black/10 hover:bg-black/2">
-                      <td
-                        rowSpan={2}
-                        className="py-4 px-2 sm:py-5 sm:px-4 align-middle font-medium text-black/90 bg-black/3 border-r border-black/10"
-                      >
-                        <div className="font-semibold break-words">
-                          {row.material === "頂級卡（平面） / 細紋紙" ? (
-                            <>
-                              <span>頂級卡（平面） / </span>
-                              <span
-                                className="cursor-pointer hover:text-blue-600 transition-colors"
+                {DELUXE_PAPER_DATA_2_DETAILED.map((row, idx) => {
+                  // 跳過需要與前一個項目合併的項目
+                  if ((row as any).isCombinedWithPrevious) {
+                    return null;
+                  }
+                  
+                  const hasSingle = row.single !== null;
+                  const hasDouble = row.double !== null;
+                  
+                  // 收集所有後續需要合併的項目
+                  const combinedRows: typeof row[] = [];
+                  let nextIdx = idx + 1;
+                  while (nextIdx < DELUXE_PAPER_DATA_2_DETAILED.length) {
+                    const nextRow = DELUXE_PAPER_DATA_2_DETAILED[nextIdx];
+                    if ((nextRow as any).isCombinedWithPrevious) {
+                      combinedRows.push(nextRow);
+                      nextIdx++;
+                    } else {
+                      break;
+                    }
+                  }
+                  
+                  // 從合併項目中提取 single 和 double
+                  let combinedSingle = null;
+                  let combinedDouble = null;
+                  combinedRows.forEach(combinedRow => {
+                    if (combinedRow.single) {
+                      combinedSingle = combinedRow.single;
+                    }
+                    if (combinedRow.double) {
+                      combinedDouble = combinedRow.double;
+                    }
+                  });
+                  
+                  // 確定最終的 single 和 double
+                  const finalSingle = hasSingle ? row.single : combinedSingle;
+                  const finalDouble = hasDouble ? row.double : combinedDouble;
+                  const finalHasSingle = finalSingle !== null;
+                  const finalHasDouble = finalDouble !== null;
+                  
+                  const rowSpan = (finalHasSingle && finalHasDouble) ? 2 : 1;
+                  
+                  // 如果有合併項目或者主項目有價格，才渲染
+                  if (!finalHasSingle && !finalHasDouble) {
+                    return null;
+                  }
+                  
+                  return (
+                    <React.Fragment key={idx}>
+                      {finalHasSingle && (
+                        <tr className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
+                          <td
+                            rowSpan={rowSpan}
+                            className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600"
+                          >
+                            <div className="space-y-1">
+                              <div
+                                className="text-black text-lg sm:text-xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
                                 onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  console.log("Click detected on 細紋紙");
-                                  if (onOpenVideoModal) {
-                                    onOpenVideoModal("/Canvas_2.mp4");
+                                  if (row.video && onOpenVideoModal) {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    onOpenVideoModal(row.video);
                                   }
                                 }}
-                                role="button"
-                                tabIndex={0}
+                                role={row.video ? "button" : undefined}
+                                tabIndex={row.video ? 0 : undefined}
                               >
-                                細紋紙
-                              </span>
-                            </>
-                          ) : row.material === "細波紙 / 炫光紙 / 頂級雙面上霧P（均須以雙面計價） / 五色一級卡（銀）" ? (
-                            <>
-                              <span
-                                className="cursor-pointer hover:text-blue-600 transition-colors"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  console.log("Click detected on 細波紙");
-                                  if (onOpenVideoModal) {
-                                    onOpenVideoModal("/Canvas.mp4");
-                                  }
-                                }}
-                                role="button"
-                                tabIndex={0}
-                              >
-                                細波紙
-                              </span>
-                              <span> / 炫光紙 / 頂級雙面上霧P（均須以雙面計價） / 五色一級卡（銀）</span>
-                            </>
-                          ) : row.material === "頂級象牙（420g） / 永采紙 / 瑞典一級卡 / 雙面局部上光（均須以雙面計價） / 絲絨卡 / 銀箔卡 / 磨砂卡" ? (
-                            <>
-                              <span
-                                className="cursor-pointer hover:text-blue-600 transition-colors"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  console.log("Click detected on 頂級象牙（420g）");
-                                  if (onOpenVideoModal) {
-                                    onOpenVideoModal("/Premium_Ivory.mp4");
-                                  }
-                                }}
-                                role="button"
-                                tabIndex={0}
-                              >
-                                頂級象牙（420g）
-                              </span>
-                              <span> / 永采紙 / 瑞典一級卡 / 雙面局部上光（均須以雙面計價） / </span>
-                              <span
-                                className="cursor-pointer hover:text-blue-600 transition-colors"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  console.log("Click detected on 絲絨卡");
-                                  if (onOpenVideoModal) {
-                                    onOpenVideoModal("/Velvet.mp4");
-                                  }
-                                }}
-                                role="button"
-                                tabIndex={0}
-                              >
-                                絲絨卡
-                              </span>
-                              <span> / 銀箔卡 / 磨砂卡</span>
-                            </>
-                          ) : row.material === "柳葉紙 / 爵士紙 / 絲絨局部上光 / 霧透卡 / 全透卡（最少五盒） / 磨砂冷燙卡（以雙面計價）" ? (
-                            <>
-                              <span>柳葉紙 / </span>
-                              <span
-                                className="cursor-pointer hover:text-blue-600 transition-colors"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  console.log("Click detected on 爵士紙");
-                                  if (onOpenVideoModal) {
-                                    onOpenVideoModal("/jazz.mp4");
-                                  }
-                                }}
-                                role="button"
-                                tabIndex={0}
-                              >
-                                爵士紙
-                              </span>
-                              <span> / 絲絨局部上光 / 霧透卡 / 全透卡（最少五盒） / 磨砂冷燙卡（以雙面計價）</span>
-                            </>
-                          ) : (
-                            <span>{row.material}</span>
+                                {row.material}
+                              </div>
+                              {row.description.length > 0 && row.description.map((desc, i) => (
+                                <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                                  {desc}
+                                </div>
+                              ))}
+                              {row.spec && (
+                                <div className="text-gray-600 text-xs sm:text-sm">
+                                  {row.spec}
+                                </div>
+                              )}
+                              {/* 顯示所有合併項目的信息 */}
+                              {combinedRows.map((combinedRow, combinedIdx) => (
+                                <React.Fragment key={combinedIdx}>
+                                  <div className="text-black text-lg sm:text-xl font-bold mt-2 cursor-pointer hover:opacity-80 transition-opacity"
+                                    onClick={(e) => {
+                                      if (combinedRow.video && onOpenVideoModal) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        onOpenVideoModal(combinedRow.video);
+                                      }
+                                    }}
+                                    role={combinedRow.video ? "button" : undefined}
+                                    tabIndex={combinedRow.video ? 0 : undefined}
+                                  >
+                                    {combinedRow.material}
+                                  </div>
+                                  {combinedRow.description.length > 0 && combinedRow.description.map((desc, i) => (
+                                    <div key={`combined-${combinedIdx}-${i}`} className="text-gray-600 text-xs sm:text-sm">
+                                      {desc}
+                                    </div>
+                                  ))}
+                                  {combinedRow.spec && (
+                                    <div className="text-gray-600 text-xs sm:text-sm">
+                                      {combinedRow.spec}
+                                    </div>
+                                  )}
+                                </React.Fragment>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600">
+                            單面
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                            {finalSingle?.["250"] ? `$${finalSingle["250"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                            {finalSingle?.["500"] ? `$${finalSingle["500"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                            {finalSingle?.["1000"] ? `$${finalSingle["1000"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                        </tr>
+                      )}
+                      {finalHasDouble && (
+                        <tr className="border-b border-gray-600">
+                          {!finalHasSingle && (
+                            <td
+                              rowSpan={1}
+                              className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600"
+                            >
+                              <div className="space-y-1">
+                                <div
+                                  className="text-black text-lg sm:text-xl font-bold cursor-pointer hover:opacity-80 transition-opacity"
+                                  onClick={(e) => {
+                                    if (row.video && onOpenVideoModal) {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                      onOpenVideoModal(row.video);
+                                    }
+                                  }}
+                                  role={row.video ? "button" : undefined}
+                                  tabIndex={row.video ? 0 : undefined}
+                                >
+                                  {row.material}
+                                </div>
+                                {row.description.length > 0 && row.description.map((desc, i) => (
+                                  <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                                    {desc}
+                                  </div>
+                                ))}
+                                {row.spec && (
+                                  <div className="text-gray-600 text-xs sm:text-sm">
+                                    {row.spec}
+                                  </div>
+                                )}
+                                {/* 顯示所有合併項目的信息 */}
+                                {combinedRows.map((combinedRow, combinedIdx) => (
+                                  <React.Fragment key={combinedIdx}>
+                                    <div className="text-black text-lg sm:text-xl font-bold mt-2 cursor-pointer hover:opacity-80 transition-opacity"
+                                      onClick={(e) => {
+                                        if (combinedRow.video && onOpenVideoModal) {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          onOpenVideoModal(combinedRow.video);
+                                        }
+                                      }}
+                                      role={combinedRow.video ? "button" : undefined}
+                                      tabIndex={combinedRow.video ? 0 : undefined}
+                                    >
+                                      {combinedRow.material}
+                                    </div>
+                                    {combinedRow.description.length > 0 && combinedRow.description.map((desc, i) => (
+                                      <div key={`combined-${combinedIdx}-${i}`} className="text-gray-600 text-xs sm:text-sm">
+                                        {desc}
+                                      </div>
+                                    ))}
+                                    {combinedRow.spec && (
+                                      <div className="text-gray-600 text-xs sm:text-sm">
+                                        {combinedRow.spec}
+                                      </div>
+                                    )}
+                                  </React.Fragment>
+                                ))}
+                              </div>
+                            </td>
                           )}
-                        </div>
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-black/80 font-medium lg:whitespace-nowrap">
-                        單面印刷
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.single["250"] ? `${row.single["250"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.single["500"] ? `${row.single["500"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.single["1000"] ? `${row.single["1000"]}` : "-"}
-                      </td>
-                    </tr>
-                    <tr className="border-b border-black/10 hover:bg-black/2">
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-black/80 font-medium lg:whitespace-nowrap">
-                        雙面印刷
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.double["250"] ? `${row.double["250"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.double["500"] ? `${row.double["500"]}` : "-"}
-                      </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                        {row.double["1000"] ? `${row.double["1000"]}` : "-"}
-                      </td>
-                    </tr>
-                  </React.Fragment>
-                ))}
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600 bg-gray-300">
+                            雙面
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                            {finalDouble?.["250"] ? `$${finalDouble["250"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                            {finalDouble?.["500"] ? `$${finalDouble["500"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                            {finalDouble?.["1000"] ? `$${finalDouble["1000"]}` : <span className="text-gray-500">/</span>}
+                          </td>
+                        </tr>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
               </tbody>
             </table>
           </div>
         </div>
-        {/* 精緻紙材提醒卡片 */}
+      </div>
+
+      {/* 精緻紙材提醒卡片 */}
+      <div className="flex flex-col md:flex-row gap-8 items-start">
         <div className="flex-[1] w-full md:w-auto space-y-6">
           <div className="bg-white border border-black/10 rounded-lg p-4 sm:p-6 shadow-sm">
             <h3 className="text-xl font-light tracking-wide mb-6 text-black/90">
@@ -1211,93 +1700,17 @@ function BusinessCardSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc
   );
 }
 
-// 加工區塊（厚棉卡）
+// 加工區塊（燙金名片）
 function ProcessingSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc?: string) => void }) {
   const [showProductImages, setShowProductImages] = useState(false);
 
   return (
     <div className="flex flex-col md:flex-row gap-8 items-start">
       <div className="flex-[2] w-full md:w-auto">
-        <h3 className="text-2xl font-light tracking-wide mb-6 text-black/90">
-          厚棉卡
-        </h3>
-
-        {/* 燙金顏色 */}
-        <div className="mb-8">
-          <h4 className="text-lg font-medium mb-3 text-black/80">燙金顏色</h4>
-          <div className="flex flex-wrap gap-3 items-center">
-            {/* 黑金 */}
-            <div className="relative group cursor-pointer">
-              <img
-                src="/black.svg"
-                alt="黑金"
-                className="w-6 h-6"
-              />
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                黑金
-              </span>
-            </div>
-            {/* 金色 */}
-            <div className="relative group cursor-pointer">
-              <img
-                src="/gold.svg"
-                alt="金色"
-                className="w-6 h-6"
-              />
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                金色
-              </span>
-            </div>
-            {/* 古銅金 */}
-            <div className="relative group cursor-pointer">
-              <img
-                src="/Bronze.svg"
-                alt="古銅金"
-                className="w-6 h-6"
-              />
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                古銅金
-              </span>
-            </div>
-            {/* 銀色 */}
-            <div className="relative group cursor-pointer">
-              <img
-                src="/silver.svg"
-                alt="銀色"
-                className="w-6 h-6"
-              />
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                銀色
-              </span>
-            </div>
-            {/* 深銅亮金 */}
-            <div className="relative group cursor-pointer">
-              <img
-                src="/rose-gold.svg"
-                alt="深銅亮金"
-                className="w-6 h-6"
-              />
-              <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                深銅亮金
-              </span>
-            </div>
-            {/* 實際成品按鈕 */}
-            <button
-              onClick={() => setShowProductImages(true)}
-              className="ml-4 px-3 py-1.5 text-sm text-black/80 bg-white border border-black/20 rounded hover:bg-black/5 hover:border-black/30 transition-colors"
-            >
-              實際成品
-            </button>
-          </div>
-          <p className="text-sm text-black/60 mt-3">
-            （若選擇其它燙金色費用另計）
-          </p>
-        </div>
-
         {/* 實際成品圖片 Modal */}
         {showProductImages && (
           <div
-            className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/60 flex items-start justify-center z-50 p-4"
             onClick={() => setShowProductImages(false)}
           >
             <div
@@ -1345,98 +1758,573 @@ function ProcessingSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc?:
           </div>
         )}
 
-        {/* 厚棉卡價格表 */}
-        <div>
-          <table className="w-full border-collapse text-xs sm:text-sm table-fixed">
-            <colgroup>
-              <col className="w-[40%]" />
-              <col className="w-[12%]" />
-              <col className="w-[16%]" />
-              <col className="w-[16%]" />
-              <col className="w-[16%]" />
-            </colgroup>
+        {/* 優惠燙金名片價格表 */}
+        <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+          <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
             <thead>
-              <tr className="border-b-2 border-black/30">
-                <th className="text-left py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  紙材
+              {/* 標題和數量標頭 - 同一行 */}
+              <tr>
+                <th colSpan={2} className="p-0 border-b border-gray-600">
+                  <div className="py-3 px-4 text-left">
+                    <h3 className="text-2xl font-bold text-black">
+                      優惠燙金名片
+                    </h3>
+                  </div>
                 </th>
-                <th className="text-left py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  印刷
-                </th>
-                <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  3盒
-                </th>
-                <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  4盒
-                </th>
-                <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5">
-                  5盒
+                <th colSpan={3} className="p-0 border-b border-gray-600">
+                  <div className="flex gap-0">
+                    <div className="flex-1 text-center py-3 px-2">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>3盒</span>
+                    </div>
+                    <div className="flex-1 text-center py-3 px-2">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>4盒</span>
+                    </div>
+                    <div className="flex-1 text-center py-3 px-2">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>5盒</span>
+                    </div>
+                  </div>
                 </th>
               </tr>
             </thead>
+            <colgroup>
+              <col className="w-[35%]" />
+              <col className="w-[15%]" />
+              <col className="w-[16.67%]" />
+              <col className="w-[16.67%]" />
+              <col className="w-[16.67%]" />
+            </colgroup>
             <tbody>
               {THICK_COTTON_CARD_DATA.map((row, idx) => (
                 <React.Fragment key={idx}>
-                  <tr className="border-b border-black/10 hover:bg-black/2">
+                  <tr className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
                     <td
                       rowSpan={2}
-                      className="py-4 px-2 sm:py-5 sm:px-4 align-middle font-medium text-black/90 bg-black/3 border-r border-black/10"
+                      className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600"
                     >
-                      <div className="font-semibold break-words">
-                        {row.material === "超質黑卡(56條),進口美術紙(靛藍250P)" ? (
-                          <>
+                      <div className="space-y-1">
+                        <div className="text-black text-lg sm:text-xl font-bold break-words">
+                          {row.material === "超質黑卡(56條),進口美術紙(靛藍250P)" ? (
+                            <>
+                              <span
+                                className="cursor-pointer hover:opacity-80 transition-opacity"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  if (onOpenVideoModal) {
+                                    onOpenVideoModal("/black_card.mp4");
+                                  }
+                                }}
+                                role="button"
+                                tabIndex={0}
+                              >
+                                超質黑卡(56條)
+                              </span>
+                              <span>,進口美術紙(靛藍250P)</span>
+                            </>
+                          ) : row.material === "手工超厚棉質卡(80條)" ? (
                             <span
-                              className="cursor-pointer hover:text-blue-600 transition-colors"
+                              className="cursor-pointer hover:opacity-80 transition-opacity"
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
-                                console.log("Click detected on 超質黑卡(56條)");
-                                if (onOpenVideoModal) {
-                                  onOpenVideoModal("/black_card.mp4");
-                                }
+                                setShowProductImages(true);
                               }}
                               role="button"
                               tabIndex={0}
                             >
-                              超質黑卡(56條)
+                              {row.material}
                             </span>
-                            <span>,進口美術紙(靛藍250P)</span>
-                          </>
-                        ) : (
-                          <span>{row.material}</span>
-                        )}
+                          ) : (
+                            <span>{row.material}</span>
+                          )}
+                        </div>
                       </div>
                     </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-black/80 font-medium lg:whitespace-nowrap">單面印刷</td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.single["3"] ? `${row.single["3"]}` : "-"}
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600">
+                      單面
                     </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.single["4"] ? `${row.single["4"]}` : "-"}
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      {row.single["3"] ? `$${row.single["3"]}` : <span className="text-gray-500">/</span>}
                     </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.single["5"] ? `${row.single["5"]}` : "-"}
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      {row.single["4"] ? `$${row.single["4"]}` : <span className="text-gray-500">/</span>}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      {row.single["5"] ? `$${row.single["5"]}` : <span className="text-gray-500">/</span>}
                     </td>
                   </tr>
-                  <tr className="border-b border-black/10 hover:bg-black/2">
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-black/80 font-medium lg:whitespace-nowrap">雙面印刷</td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.double["3"] ? `${row.double["3"]}` : "-"}
+                  <tr className="border-b border-gray-600">
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-bold text-sm sm:text-base border-r border-gray-600 bg-gray-300">
+                      雙面
                     </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.double["4"] ? `${row.double["4"]}` : "-"}
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                      {row.double["3"] ? `$${row.double["3"]}` : <span className="text-gray-500">/</span>}
                     </td>
-                    <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
-                      {row.double["5"] ? `${row.double["5"]}` : "-"}
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                      {row.double["4"] ? `$${row.double["4"]}` : <span className="text-gray-500">/</span>}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600 bg-gray-300">
+                      {row.double["5"] ? `$${row.double["5"]}` : <span className="text-gray-500">/</span>}
                     </td>
                   </tr>
                 </React.Fragment>
               ))}
             </tbody>
           </table>
+
+          {/* 燙金顏色 */}
+          <div className="mt-6">
+            <h4 className="text-lg font-medium mb-3 text-black/80">燙金顏色</h4>
+            <div className="flex flex-wrap gap-3 items-center">
+              {/* 黑金 */}
+              <div className="relative group cursor-pointer">
+                <img
+                  src="/black.svg"
+                  alt="黑金"
+                  className="w-6 h-6"
+                />
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                  黑金
+                </span>
+              </div>
+              {/* 金色 */}
+              <div className="relative group cursor-pointer">
+                <img
+                  src="/gold.svg"
+                  alt="金色"
+                  className="w-6 h-6"
+                />
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                  金色
+                </span>
+              </div>
+              {/* 古銅金 */}
+              <div className="relative group cursor-pointer">
+                <img
+                  src="/Bronze.svg"
+                  alt="古銅金"
+                  className="w-6 h-6"
+                />
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                  古銅金
+                </span>
+              </div>
+              {/* 銀色 */}
+              <div className="relative group cursor-pointer">
+                <img
+                  src="/silver.svg"
+                  alt="銀色"
+                  className="w-6 h-6"
+                />
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                  銀色
+                </span>
+              </div>
+              {/* 深銅亮金 */}
+              <div className="relative group cursor-pointer">
+                <img
+                  src="/rose-gold.svg"
+                  alt="深銅亮金"
+                  className="w-6 h-6"
+                />
+                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-black/80 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                  深銅亮金
+                </span>
+              </div>
+            </div>
+            <p className="text-sm text-black/60 mt-3">
+              （若選擇其它燙金色費用另計）
+            </p>
+          </div>
+        </div>
+
+        {/* 其他加工項目價格表 */}
+        <div className="mt-16 space-y-8">
+          {/* 第一區塊：壓線、切圓角、打孔 */}
+          <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+            <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
+              <thead>
+                <tr>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-left">
+                      <h3 className="text-2xl font-bold text-black">
+                        其他加工項目
+                      </h3>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>基本費</span>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>100張</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <colgroup>
+                <col className="w-[40%]" />
+                <col className="w-[30%]" />
+                <col className="w-[30%]" />
+              </colgroup>
+              <tbody>
+                {PROCESSING_GROUP_1.map((row, idx) => {
+                  const combinedItemsCount = row.combinedItems ? row.combinedItems.length : 0;
+                  const totalRowSpan = 1 + combinedItemsCount;
+                  
+                  return (
+                    <tr key={idx} className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
+                      <td
+                        rowSpan={totalRowSpan}
+                        className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600"
+                      >
+                        <div className="space-y-1">
+                          <div className="text-black text-lg sm:text-xl font-bold break-words">
+                            {row.material}
+                          </div>
+                          {row.description.length > 0 && row.description.map((desc, i) => (
+                            <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                              {desc}
+                            </div>
+                          ))}
+                          {row.combinedItems && row.combinedItems.map((combinedItem, combinedIdx) => (
+                            <div key={combinedIdx} className="text-black text-lg sm:text-xl font-bold break-words mt-2">
+                              {combinedItem}
+                            </div>
+                          ))}
+                        </div>
+                      </td>
+                      <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                        ${row.baseFee}
+                      </td>
+                      <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                        ${row.per100Sheets}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* 第二區塊：流水號(燙金) */}
+          <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+            <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
+              <thead>
+                <tr>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-left">
+                      <h3 className="text-2xl font-bold text-black">
+                        其他加工項目
+                      </h3>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>基本費</span>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>每張</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <colgroup>
+                <col className="w-[40%]" />
+                <col className="w-[30%]" />
+                <col className="w-[30%]" />
+              </colgroup>
+              <tbody>
+                {PROCESSING_GROUP_2.map((row, idx) => (
+                  <tr key={idx} className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600">
+                      <div className="space-y-1">
+                        <div className="text-black text-lg sm:text-xl font-bold break-words">
+                          {row.material}
+                        </div>
+                        {row.description.length > 0 && row.description.map((desc, i) => (
+                          <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                            {desc}
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.baseFee}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.perSheet}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* 第三區塊：軋型費 */}
+          <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+            <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
+              <thead>
+                <tr>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-left">
+                      <h3 className="text-2xl font-bold text-black">
+                        其他加工項目
+                      </h3>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>1000張內</span>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>2000張內</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <colgroup>
+                <col className="w-[40%]" />
+                <col className="w-[30%]" />
+                <col className="w-[30%]" />
+              </colgroup>
+              <tbody>
+                {PROCESSING_GROUP_3.map((row, idx) => (
+                  <tr key={idx} className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600">
+                      <div className="space-y-1">
+                        <div className="text-black text-lg sm:text-xl font-bold break-words">
+                          {row.material}
+                        </div>
+                        {row.description.length > 0 && row.description.map((desc, i) => (
+                          <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                            {desc}
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.within1000.toLocaleString()}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.within2000.toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* 第四區塊：燙金 */}
+          <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+            <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
+              <thead>
+                <tr>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-left">
+                      <h3 className="text-2xl font-bold text-black">
+                        燙金
+                      </h3>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>製版費</span>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>加工基本費</span>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>每張</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <colgroup>
+                <col className="w-[25%]" />
+                <col className="w-[25%]" />
+                <col className="w-[25%]" />
+                <col className="w-[25%]" />
+              </colgroup>
+              <tbody>
+                {PROCESSING_GROUP_4.map((row, idx) => (
+                  <tr key={idx} className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-black text-lg sm:text-xl font-bold border-r border-gray-600">
+                      {row.size}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.plateFee}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.baseFee}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.perSheet}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="text-center text-sm text-black/70 mt-4">
+              滿版燙金請聯繫專人報價
+            </p>
+          </div>
+
+          {/* 第五區塊：打凸 */}
+          <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+            <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
+              <thead>
+                <tr>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-left">
+                      <h3 className="text-2xl font-bold text-black">
+                        打凸
+                      </h3>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>製版費</span>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>加工基本費</span>
+                    </div>
+                  </th>
+                  <th colSpan={1} className="p-0 border-b border-gray-600">
+                    <div className="py-3 px-4 text-center">
+                      <span className="text-sm sm:text-base" style={{ color: 'rgb(255, 127, 127)', fontWeight: 800 }}>每張</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <colgroup>
+                <col className="w-[25%]" />
+                <col className="w-[25%]" />
+                <col className="w-[25%]" />
+                <col className="w-[25%]" />
+              </colgroup>
+              <tbody>
+                {PROCESSING_GROUP_5.map((row, idx) => (
+                  <tr key={idx} className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-black text-lg sm:text-xl font-bold border-r border-gray-600">
+                      {row.size}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.plateFee}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.baseFee}
+                    </td>
+                    <td className="py-4 px-3 sm:py-5 sm:px-4 text-center text-black font-medium border-r border-gray-600">
+                      ${row.perSheet}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <p className="text-center text-sm text-black/70 mt-4">
+              滿版打凸請聯繫專人報價
+            </p>
+          </div>
+
+          {/* 其他項目 */}
+          {OTHER_PROCESSING_DATA.length > 0 && (
+            <div className="bg-gray-200 rounded-lg p-4 sm:p-6">
+              <table className="w-full border-collapse border border-gray-600 text-xs sm:text-sm">
+                <thead>
+                  <tr>
+                    <th colSpan={2} className="p-0 border-b border-gray-600">
+                      <div className="py-3 px-4 text-left">
+                        <h3 className="text-2xl font-bold text-black">
+                          其他加工項目
+                        </h3>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <colgroup>
+                  <col className="w-[40%]" />
+                  <col className="w-[60%]" />
+                </colgroup>
+                <tbody>
+                  {OTHER_PROCESSING_DATA.map((row, idx) => {
+                    const subItemsCount = row.subItems ? row.subItems.length : 0;
+                    const totalRowSpan = 1 + (subItemsCount > 0 ? subItemsCount + 1 : 0);
+                    
+                    return (
+                      <React.Fragment key={idx}>
+                        <tr className={`border-b border-gray-600 ${idx === 0 ? 'border-t border-gray-600' : ''}`}>
+                          <td
+                            rowSpan={totalRowSpan}
+                            className="py-4 px-3 sm:py-5 sm:px-4 align-top border-r border-gray-600"
+                          >
+                            <div className="space-y-1">
+                              <div className="text-black text-lg sm:text-xl font-bold break-words">
+                                {row.material}
+                              </div>
+                              {row.description.length > 0 && row.description.map((desc, i) => (
+                                <div key={i} className="text-gray-600 text-xs sm:text-sm">
+                                  {desc}
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                          <td className="py-4 px-3 sm:py-5 sm:px-4 text-black font-medium border-r border-gray-600">
+                            {row.price}
+                          </td>
+                        </tr>
+                        {row.subItems && (
+                          <>
+                            <tr className="border-b border-gray-600">
+                              <td className="py-4 px-3 sm:py-5 sm:px-4 text-black font-medium border-r border-gray-600">
+                                <div className="text-black text-base sm:text-lg font-semibold">
+                                  {row.subItems[0].material}
+                                </div>
+                                {row.subItems[0].price && (
+                                  <div className="text-black text-sm mt-1">
+                                    {row.subItems[0].price}
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
+                            {row.subItems.slice(1).map((subItem, subIdx) => (
+                              <tr key={`sub-${subIdx}`} className="border-b border-gray-600">
+                                <td className="py-4 px-3 sm:py-5 sm:px-4 text-black font-medium border-r border-gray-600">
+                                  <div className="text-black text-base sm:text-lg font-semibold">
+                                    {subItem.material}
+                                  </div>
+                                  {subItem.price && (
+                                    <div className="text-black text-sm mt-1">
+                                      {subItem.price}
+                                    </div>
+                                  )}
+                                </td>
+                              </tr>
+                            ))}
+                          </>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
-      {/* 厚棉卡提醒卡片 */}
+      {/* 燙金名片提醒卡片 */}
       <div className="flex-[1] w-full md:w-auto space-y-6">
         <div className="bg-white border border-black/10 rounded-lg p-4 sm:p-6 shadow-sm">
           <h4 className="text-lg font-light tracking-wide mb-4 text-black/90">
@@ -1570,7 +2458,7 @@ function DMPosterSection() {
                     <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5 lg:whitespace-nowrap">
                       單面印刷
                     </th>
-                    <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5 lg:whitespace-nowrap">
+                    <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-gray-300 lg:whitespace-nowrap">
                       雙面印刷
                     </th>
                   </tr>
@@ -1586,7 +2474,7 @@ function DMPosterSection() {
                           ? `${row.single}`
                           : row.single}
                       </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
+                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium bg-gray-300">
                         {typeof row.double === "number"
                           ? `${row.double}`
                           : row.double}
@@ -1619,7 +2507,7 @@ function DMPosterSection() {
                     <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5 lg:whitespace-nowrap">
                       單面印刷
                     </th>
-                    <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5 lg:whitespace-nowrap">
+                    <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-gray-300 lg:whitespace-nowrap">
                       雙面印刷
                     </th>
                   </tr>
@@ -1635,7 +2523,7 @@ function DMPosterSection() {
                           ? `${row.single}`
                           : row.single}
                       </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
+                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium bg-gray-300">
                         {typeof row.double === "number"
                           ? `${row.double}`
                           : row.double}
@@ -1668,7 +2556,7 @@ function DMPosterSection() {
                     <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5 lg:whitespace-nowrap">
                       單面印刷
                     </th>
-                    <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5 lg:whitespace-nowrap">
+                    <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-gray-300 lg:whitespace-nowrap">
                       雙面印刷
                     </th>
                   </tr>
@@ -1684,7 +2572,7 @@ function DMPosterSection() {
                           ? `${row.single}`
                           : row.single}
                       </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
+                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium bg-gray-300">
                         {typeof row.double === "number"
                           ? `${row.double}`
                           : row.double}
@@ -1717,7 +2605,7 @@ function DMPosterSection() {
                     <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5 lg:whitespace-nowrap">
                       單面印刷
                     </th>
-                    <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-black/5 lg:whitespace-nowrap">
+                    <th className="text-center py-3 px-2 sm:py-4 sm:px-4 font-semibold text-black/90 bg-gray-300 lg:whitespace-nowrap">
                       雙面印刷
                     </th>
                   </tr>
@@ -1733,7 +2621,7 @@ function DMPosterSection() {
                           ? `${row.single}`
                           : row.single}
                       </td>
-                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium">
+                      <td className="py-2 px-2 sm:py-3 sm:px-4 text-center text-black/80 whitespace-nowrap font-medium bg-gray-300">
                         {typeof row.double === "number"
                           ? `${row.double}`
                           : row.double}
