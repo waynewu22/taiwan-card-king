@@ -2299,7 +2299,7 @@ function ProcessingSection({ onOpenVideoModal }: { onOpenVideoModal: (videoSrc?:
                                 )}
                               </td>
                             </tr>
-                            {row.subItems.slice(1).map((subItem, subIdx) => (
+                            {row.subItems.slice(1).map((subItem: any, subIdx: number) => (
                               <tr key={`sub-${subIdx}`} className="border-b border-gray-600">
                                 <td className="py-4 px-3 sm:py-5 sm:px-4 text-black font-medium border-r border-gray-600">
                                   <div className="text-black text-base sm:text-lg font-semibold">
