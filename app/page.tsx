@@ -1680,95 +1680,93 @@ function PriceCalculator() {
   const calculatorServices = ["彩色名片", "A4 DM", "厚棉卡/黑卡"];
 
   return (
-    <div className="bg-gray-200 rounded-lg p-6 lg:p-8">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-        {/* 左側面板 */}
-        <div className="bg-gray-300 rounded-lg p-4 space-y-4">
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">
-              服務項目
-            </label>
-            <select
-              value={service}
-              onChange={(e) => setService(e.target.value)}
-              className="w-full bg-gray-600 text-white rounded-lg px-4 py-3 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              {calculatorServices.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">
-              材質
-            </label>
-            <select
-              value={material}
-              onChange={(e) => setMaterial(e.target.value)}
-              className="w-full bg-gray-600 text-white rounded-lg px-4 py-3 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              {materialOptions.map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
-        {/* 中間面板 */}
-        <div className="bg-gray-500 rounded-lg p-4 space-y-4">
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">
-              印刷單/雙面
-            </label>
-            <select
-              value={printType}
-              onChange={(e) => setPrintType(e.target.value)}
-              className="w-full bg-gray-400 text-white rounded-lg px-4 py-3 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-300"
-            >
-              {!isDoubleSideOnly && (
-                <option value="單面印刷">單面印刷</option>
-              )}
-              <option value="雙面印刷">雙面印刷</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">
-              數量
-            </label>
-            <select
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              disabled={quantityOptions.length === 0}
-              className="w-full bg-gray-400 text-white rounded-lg px-4 py-3 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {quantityOptions.length === 0 ? (
-                <option value="">請先選擇材質</option>
-              ) : (
-                quantityOptions.map((q) => (
-                  <option key={q} value={q}>
-                    {q}
+    <div className="rounded-lg">
+      <div className="grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 lg:gap-6">
+        {/* 左側面板 - 合併後的輸入面板 */}
+        <div className="bg-[#f7931e] rounded-[26px] p-4 shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">
+                服務項目
+              </label>
+              <select
+                value={service}
+                onChange={(e) => setService(e.target.value)}
+                className="w-full bg-white/90 text-gray-800 rounded-lg px-4 py-3 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50"
+              >
+                {calculatorServices.map((s) => (
+                  <option key={s} value={s}>
+                    {s}
                   </option>
-                ))
-              )}
-            </select>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">
+                材質
+              </label>
+              <select
+                value={material}
+                onChange={(e) => setMaterial(e.target.value)}
+                className="w-full bg-white/90 text-gray-800 rounded-lg px-4 py-3 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50"
+              >
+                {materialOptions.map((m) => (
+                  <option key={m} value={m}>
+                    {m}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">
+                印刷單/雙面
+              </label>
+              <select
+                value={printType}
+                onChange={(e) => setPrintType(e.target.value)}
+                className="w-full bg-white/90 text-gray-800 rounded-lg px-4 py-3 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50"
+              >
+                {!isDoubleSideOnly && (
+                  <option value="單面印刷">單面印刷</option>
+                )}
+                <option value="雙面印刷">雙面印刷</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">
+                數量
+              </label>
+              <select
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                disabled={quantityOptions.length === 0}
+                className="w-full bg-white/90 text-gray-800 rounded-lg px-4 py-3 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {quantityOptions.length === 0 ? (
+                  <option value="">請先選擇材質</option>
+                ) : (
+                  quantityOptions.map((q) => (
+                    <option key={q} value={q}>
+                      {q}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
           </div>
         </div>
 
-        {/* 右側面板 - 計算結果 */}
-        <div className="bg-gray-300 rounded-lg p-4 flex items-center justify-center min-h-[200px]">
+        {/* 右側面板 - 計算結果（圓角長方形面板） */}
+        <div className="bg-gray-700 rounded-[26px] p-4 flex items-center justify-center shadow-lg min-h-[200px]">
           {!showPriceResult ? (
             <button
               onClick={() => setShowPriceResult(true)}
-              className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+              className="w-full bg-white/20 hover:bg-white/30 text-white font-medium py-3 px-4 rounded-lg transition-colors"
             >
               試算價格
             </button>
           ) : (
-            <div className="text-black text-right w-full space-y-3">
+            <div className="text-white text-right w-full space-y-3">
               <div 
                 className={`text-base font-bold transition-all duration-700 ease-out ${
                   showLines.material 
@@ -1796,7 +1794,7 @@ function PriceCalculator() {
               >
                 {quantity}
               </div>
-              <hr className="border-t border-black/20 my-3" />
+              <hr className="border-t border-white/20 my-3" />
               <div 
                 className={`transition-all duration-700 ease-out ${
                   showLines.price 
@@ -1804,11 +1802,26 @@ function PriceCalculator() {
                     : 'opacity-0 translate-y-4'
                 }`}
               >
-                <span className="text-2xl font-bold text-black/30">預估印刷</span>
-                <span className="text-2xl font-bold">金額</span>{" "}
-                <span className="text-2xl font-bold" style={{ color: "rgb(255, 127, 127)" }}>
+                <span className="text-2xl font-bold text-white/30">預估印刷</span>
+                <span className="text-2xl font-bold text-white">金額</span>{" "}
+                <span className="text-2xl font-bold text-[#f7931e]">
                   {animatedPrice.toLocaleString()}
                 </span>
+              </div>
+              {/* 查看完整價格和上傳檔案連結 */}
+              <div className="mt-4 text-right space-x-6">
+                <Link
+                  href="/pricing"
+                  className="inline-block text-[#f7931e] hover:text-[#e8841a] font-bold text-sm transition-colors"
+                >
+                  查看完整價格
+                </Link>
+                <Link
+                  href="/#contact"
+                  className="inline-block text-[#f7931e] hover:text-[#e8841a] font-bold text-sm transition-colors"
+                >
+                  上傳我的檔案
+                </Link>
               </div>
             </div>
           )}
@@ -2478,21 +2491,13 @@ function DeliveryOptions() {
             minHeight: '300px'
           }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: "rgba(78, 205, 196, 0.2)" }}
+          <div className="mb-4 text-center">
+            <h3
+              style={{ color: "rgb(255, 127, 127)" }}
+              className="text-xl font-bold"
             >
-              <span className="text-2xl">👩‍💼</span>
-            </div>
-            <div>
-              <h3
-                style={{ color: "rgb(255, 127, 127)" }}
-                className="text-xl font-medium"
-              >
-                自取
-              </h3>
-            </div>
+              自取
+            </h3>
           </div>
           <div
             className="space-y-3 text-sm text-left leading-relaxed"
@@ -2537,21 +2542,13 @@ function DeliveryOptions() {
             minHeight: '300px'
           }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: "rgba(78, 205, 196, 0.2)" }}
+          <div className="mb-4 text-center">
+            <h3
+              style={{ color: "rgb(255, 127, 127)" }}
+              className="text-xl font-bold"
             >
-              <span className="text-2xl">🚚</span>
-            </div>
-            <div>
-              <h3
-                style={{ color: "rgb(255, 127, 127)" }}
-                className="text-xl font-medium"
-              >
-                宅配
-              </h3>
-            </div>
+              宅配
+            </h3>
           </div>
           <div
             className="space-y-3 text-sm text-left leading-relaxed"
@@ -2588,21 +2585,13 @@ function DeliveryOptions() {
             minHeight: '300px'
           }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: "rgba(78, 205, 196, 0.2)" }}
+          <div className="mb-4 text-center">
+            <h3
+              style={{ color: "rgb(255, 127, 127)" }}
+              className="text-xl font-bold"
             >
-              <span className="text-2xl">🏪</span>
-            </div>
-            <div>
-              <h3
-                style={{ color: "rgb(255, 127, 127)" }}
-                className="text-xl font-medium"
-              >
-                7-11店到店
-              </h3>
-            </div>
+              7-11店到店
+            </h3>
           </div>
           <div
             className="space-y-3 text-sm text-left leading-relaxed"
@@ -2638,21 +2627,13 @@ function DeliveryOptions() {
             minHeight: '300px'
           }}
         >
-          <div className="flex items-center gap-3 mb-4">
-            <div
-              className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{ backgroundColor: "rgba(78, 205, 196, 0.2)" }}
+          <div className="mb-4 text-center">
+            <h3
+              style={{ color: "rgb(255, 127, 127)" }}
+              className="text-xl font-bold"
             >
-              <span className="text-2xl">📦</span>
-            </div>
-            <div>
-              <h3
-                style={{ color: "rgb(255, 127, 127)" }}
-                className="text-xl font-medium"
-              >
-                郵政宅配
-              </h3>
-            </div>
+              郵政宅配
+            </h3>
           </div>
           <div
             className="space-y-3 text-sm text-left leading-relaxed flex-grow"
