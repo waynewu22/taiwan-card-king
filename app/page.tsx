@@ -15,6 +15,10 @@ export default function HomePage() {
   const [scrollY, setScrollY] = useState(0);
   const [hoveredCardIndex, setHoveredCardIndex] = useState<number | null>(0); // 桌電版預設第一張卡片放大
   const [expandedCardIndex, setExpandedCardIndex] = useState<number | null>(null); // 手機版展開的卡片索引
+  const [isAboutVisible, setIsAboutVisible] = useState(false);
+  const [isAboutAnimDone, setIsAboutAnimDone] = useState(false);
+  const [isStatsVisible, setIsStatsVisible] = useState(false);
+  const [isCalculatorVisible, setIsCalculatorVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth < 640; // sm 斷點是 640px
@@ -22,12 +26,12 @@ export default function HomePage() {
     return false;
   });
   const [cardMinHeight, setCardMinHeight] = useState<string>('400px'); // 預設平板高度
-  const [counters, setCounters] = useState({ stat1: 0, stat2: 0, stat3: 0 });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [heroHeight, setHeroHeight] = useState<number>(800);
   const [isHeaderFixed, setIsHeaderFixed] = useState(false);
   const hasAnimatedRef = useRef(false);
-  const statsRef = useRef<HTMLDivElement>(null);
+  const aboutRef = useRef<HTMLDivElement>(null);
+  const calculatorRef = useRef<HTMLDivElement>(null);
 
   // 檢測是否為手機版和設置卡片高度
   useEffect(() => {
@@ -36,6 +40,9 @@ export default function HomePage() {
       setIsMobile(width < 640); // sm 斷點是 640px
       // 設置卡片最小高度：平板 400px，桌電 500px
       setCardMinHeight(width >= 1024 ? '500px' : '400px');
+      if (width >= 1024) {
+        setIsHeaderFixed(false);
+      }
     };
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -58,55 +65,18 @@ export default function HomePage() {
     return () => window.removeEventListener('resize', updateHeroHeight);
   }, []);
 
-  // 計數器動畫效果
+  // 公司介紹文字進場動畫
   useEffect(() => {
-    if (hasAnimatedRef.current) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimatedRef.current) {
-            hasAnimatedRef.current = true;
-            
-            // 目標數字
-            const targets = { stat1: 20, stat2: 3000, stat3: 100000 };
-            const duration = 2000; // 2秒動畫時間
-            const startTime = Date.now();
-
-            const animate = () => {
-              const elapsed = Date.now() - startTime;
-              const progress = Math.min(elapsed / duration, 1);
-              
-              // 使用 easeOutCubic 緩動函數
-              const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-              const easedProgress = easeOutCubic(progress);
-
-              setCounters({
-                stat1: Math.floor(targets.stat1 * easedProgress),
-                stat2: Math.floor(targets.stat2 * easedProgress),
-                stat3: Math.floor(targets.stat3 * easedProgress),
-              });
-
-              if (progress < 1) {
-                requestAnimationFrame(animate);
-              } else {
-                // 確保最終值正確
-                setCounters({
-                  stat1: targets.stat1,
-                  stat2: targets.stat2,
-                  stat3: targets.stat3,
-                });
-              }
-            };
-
-            requestAnimationFrame(animate);
-          }
+          setIsAboutVisible(entry.isIntersecting);
         });
       },
-      { threshold: 0.3 } // 當30%的元素可見時觸發
+      { threshold: 0.2 }
     );
 
-    const currentRef = statsRef.current;
+    const currentRef = aboutRef.current;
     if (currentRef) {
       observer.observe(currentRef);
     }
@@ -117,6 +87,35 @@ export default function HomePage() {
       }
     };
   }, []);
+
+  // 試算器進場動畫
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsCalculatorVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const currentRef = calculatorRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isAboutVisible) {
+      setIsAboutAnimDone(false);
+    }
+  }, [isAboutVisible]);
 
   // 導航滾動功能
   const handleNavClick = useCallback((id: string, href: string | null) => {
@@ -155,6 +154,7 @@ export default function HomePage() {
     });
   }, []);
 
+
   // 監聽滾動事件，實現 SVG 遠離和淡化效果（使用節流優化性能）
   useEffect(() => {
     let ticking = false;
@@ -168,7 +168,8 @@ export default function HomePage() {
           const currentScrollY = window.scrollY;
           setScrollY(currentScrollY);
           // 當滾動超過 100px 時，固定 header（僅手機版和平板版）
-          setIsHeaderFixed(currentScrollY > 100);
+          const isMobileOrTablet = window.innerWidth < 1024;
+          setIsHeaderFixed(isMobileOrTablet && currentScrollY > 100);
           ticking = false;
         });
         ticking = true;
@@ -224,7 +225,7 @@ export default function HomePage() {
   return (
     <main className="bg-white text-black overflow-x-hidden w-full">
       {/* Header - 固定在頂部（手機版和平板版，僅在滾動時） */}
-      <header className={`${isHeaderFixed ? 'fixed' : 'absolute'} lg:relative top-0 left-0 right-0 z-50 py-4 sm:py-6 lg:pt-8 lg:pb-8 lg:pl-8 xl:pl-12 ${isHeaderFixed ? 'bg-white/60 backdrop-blur-md shadow-sm' : 'bg-transparent'} lg:!bg-transparent lg:!backdrop-blur-none lg:!shadow-none transition-all duration-300`}>
+      <header className={`${isHeaderFixed ? 'fixed' : 'absolute'} lg:absolute top-0 left-0 right-0 z-50 py-4 sm:py-6 lg:pt-8 lg:pb-8 lg:pl-8 xl:pl-12 ${isHeaderFixed ? 'bg-white/60 backdrop-blur-md shadow-sm' : 'bg-transparent'} lg:!bg-transparent lg:!backdrop-blur-none lg:!shadow-none transition-all duration-300`}>
         <div className="flex items-center justify-between lg:justify-start px-4 sm:px-6 lg:px-0 h-full">
           <div className="flex justify-center lg:justify-start flex-1 lg:flex-none absolute left-1/2 -translate-x-1/2 lg:static lg:left-auto lg:translate-x-0">
             <img
@@ -405,40 +406,85 @@ export default function HomePage() {
                 }}
               >
                 {/* 中央標題 */}
-                <h1 
-                  className={`text-4xl sm:text-6xl lg:text-7xl font-bold text-black/70 mb-6 leading-tight ${
-                    isTitleVisible ? 'animate-fade-in-up' : 'opacity-0'
-                  }`}
+                <h1
+                  className="text-4xl sm:text-6xl lg:text-7xl font-bold text-black/70 mb-6 leading-tight"
+                  aria-label="名片王 二十年服務不間斷"
                 >
-                  名片王<br />二十年服務不間斷
+                  {(() => {
+                    const title = "名片王\n二十年服務不間斷";
+                    let charIndex = 0;
+                    return title.split("").map((char, idx) => {
+                      if (char === "\n") {
+                        return <br key={`br-${idx}`} />;
+                      }
+                      const delay = charIndex * 0.06;
+                      charIndex += 1;
+                      return (
+                        <span
+                          key={`char-${idx}`}
+                          className="inline-block opacity-0"
+                          style={{
+                            animation: isTitleVisible
+                              ? `fadeInUp 0.6s ease-out ${delay}s forwards`
+                              : undefined,
+                          }}
+                        >
+                          {char}
+                        </span>
+                      );
+                    });
+                  })()}
                 </h1>
-
-                {/* 向下滾動提示箭頭 */}
-                <div 
-                  className={`flex flex-col items-center mt-8 ${
-                    isTitleVisible ? 'animate-fade-in-up-delay-2' : 'opacity-0'
+                <div
+                  className={`flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 ${
+                    isTitleVisible ? "animate-fade-in-up-delay-2" : "opacity-0"
                   }`}
                 >
-                  <div className="animate-bounce-down">
-                    <svg
-                      xmlns="https://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="w-8 h-8 text-black/60"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
-                      />
-                    </svg>
-        </div>
-            </div>
-          </div>
+                  <Link
+                    href="#calculator"
+                    className="rounded-full bg-black/80 text-white px-6 py-3 text-sm sm:text-base font-bold tracking-wide hover:bg-black/90 transition-colors"
+                  >
+                    價格查詢
+                  </Link>
+                  <Link
+                    href="#contact"
+                    className="rounded-full border border-black/40 text-black/80 px-6 py-3 text-sm sm:text-base font-bold tracking-wide hover:bg-black/5 transition-colors"
+                  >
+                    評估檔案
+                  </Link>
+                </div>
+
+              </div>
             );
           })()}
+          {/* 向下滾動提示箭頭 */}
+          <div
+            className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center ${
+              isTitleVisible ? "animate-fade-in-up-delay-2" : "opacity-0"
+            }`}
+          >
+            <button
+              type="button"
+              onClick={() => handleNavClick("about", null)}
+              className="animate-bounce-down cursor-pointer"
+              aria-label="前往公司介紹"
+            >
+              <svg
+                xmlns="https://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="w-8 h-8 text-black/60"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
 
       </section>
@@ -450,7 +496,7 @@ export default function HomePage() {
         style={{ backgroundColor: "rgb(128, 128, 128)" }}
       >
         <div className="max-w-7xl mx-auto px-6 py-12">
-          {/* 服務流程 */}
+          {/* 公司歷史 */}
           <div className="mb-20">
             <div 
               className="grid grid-cols-2 sm:flex sm:flex-row sm:items-stretch gap-3 lg:gap-4 max-w-7xl mx-auto w-full"
@@ -481,6 +527,13 @@ export default function HomePage() {
                     backgroundImage: 'url(/g1_street.png)',
                   }}
                 />
+                <div
+                  className={`absolute inset-x-0 top-0 h-2/3 bg-gradient-to-b from-black/85 to-transparent transition-opacity duration-300 ease-out ${
+                    expandedCardIndex === 0 || hoveredCardIndex === 0
+                      ? "opacity-100"
+                      : "opacity-0"
+                  }`}
+                />
                 
                 {/* 手機版內容 */}
                 <div className="sm:hidden relative z-10 flex flex-col items-center justify-center h-full px-4 py-6">
@@ -497,7 +550,11 @@ export default function HomePage() {
                     >
                       <h4 className="text-xs font-bold text-white uppercase whitespace-nowrap">北屯巷弄內</h4>
                       <p className="text-xs text-white/70">老舊公寓裡的一人工作室</p>
-                      <p className="text-xs text-white/80 leading-relaxed">
+                      <p
+                        className={`text-xs text-white/80 leading-relaxed ${
+                          expandedCardIndex === 0 ? "" : "hidden"
+                        }`}
+                      >
                         創辦人於2000年初，於台中遼陽四街成立名片王的母公司，「宇森廣告」開始長達20年的設計業務。
                       </p>
                     </div>
@@ -527,7 +584,11 @@ export default function HomePage() {
                   </p>
 
                   {/* 描述文字 */}
-                  <p className="relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow">
+                  <p
+                    className={`relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow ${
+                      hoveredCardIndex === 0 ? "" : "hidden"
+                    }`}
+                  >
                     創辦人於2000年初，於台中遼陽四街成立名片王的母公司，「宇森廣告」開始長達20年的設計業務。
                   </p>
 
@@ -559,6 +620,13 @@ export default function HomePage() {
                     backgroundImage: 'url(/g2_street.png)',
                   }}
                 />
+                <div
+                  className={`absolute inset-x-0 top-0 h-2/3 bg-gradient-to-b from-black/85 to-transparent transition-opacity duration-300 ease-out ${
+                    expandedCardIndex === 1 || hoveredCardIndex === 1
+                      ? "opacity-100"
+                      : "opacity-0"
+                  }`}
+                />
                 
                 {/* 手機版內容 */}
                 <div className="sm:hidden relative z-10 flex flex-col items-center justify-center h-full px-4 py-6">
@@ -575,7 +643,11 @@ export default function HomePage() {
                     >
                       <h4 className="text-xs font-bold text-white uppercase whitespace-nowrap">實體門市</h4>
                       <p className="text-xs text-white/70">河南路上的服務據點</p>
-                      <p className="text-xs text-white/80 leading-relaxed">
+                      <p
+                        className={`text-xs text-white/80 leading-relaxed ${
+                          expandedCardIndex === 1 ? "" : "hidden"
+                        }`}
+                      >
                         2005年3月，我們成立了實體門市，開始提供一般平價設計與印刷項目，服務全台地區超過3,000位以上的客戶。
                       </p>
                     </div>
@@ -605,7 +677,11 @@ export default function HomePage() {
                   </p>
 
                   {/* 描述文字 */}
-                  <p className="relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow">
+                  <p
+                    className={`relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow ${
+                      hoveredCardIndex === 1 ? "" : "hidden"
+                    }`}
+                  >
                     2005年3月，我們成立了實體門市，開始提供一般平價設計與印刷項目，服務全台地區超過3,000位以上的客戶。
                   </p>
 
@@ -637,6 +713,13 @@ export default function HomePage() {
                     backgroundImage: 'url(/g3_website.png)',
                   }}
                 />
+                <div
+                  className={`absolute inset-x-0 top-0 h-2/3 bg-gradient-to-b from-black/85 to-transparent transition-opacity duration-300 ease-out ${
+                    expandedCardIndex === 2 || hoveredCardIndex === 2
+                      ? "opacity-100"
+                      : "opacity-0"
+                  }`}
+                />
                 
                 {/* 手機版內容 */}
                 <div className="sm:hidden relative z-10 flex flex-col items-center justify-center h-full px-4 py-6">
@@ -653,8 +736,12 @@ export default function HomePage() {
                     >
                       <h4 className="text-xs font-bold text-white uppercase whitespace-nowrap">建立網站及公版</h4>
                       <p className="text-xs text-white/70">提供超過200種以上不同名片公版</p>
-                      <p className="text-xs text-white/80 leading-relaxed">
-                        2007年名片王第一代網站上線，成為全台首家提供線上公版套版服務的平面設計品牌。
+                      <p
+                        className={`text-xs text-white/80 leading-relaxed ${
+                          expandedCardIndex === 2 ? "" : "hidden"
+                        }`}
+                      >
+                        2007年，名片王第一代網站上線，成為全台首家提供線上公版套版服務的平面設計品牌。
                       </p>
                     </div>
                   ) : (
@@ -683,8 +770,12 @@ export default function HomePage() {
                   </p>
 
                   {/* 描述文字 */}
-                  <p className="relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow">
-                    2007年名片王第一代網站上線，成為全台首家提供線上公版套版服務的平面設計品牌。
+                  <p
+                    className={`relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow ${
+                      hoveredCardIndex === 2 ? "" : "hidden"
+                    }`}
+                  >
+                    2007年，名片王第一代網站上線，成為全台首家提供線上公版套版服務的平面設計品牌。
                   </p>
 
                 </div>
@@ -715,6 +806,13 @@ export default function HomePage() {
                     backgroundImage: 'url(/g4_website.png)',
                   }}
                 />
+                <div
+                  className={`absolute inset-x-0 top-0 h-2/3 bg-gradient-to-b from-black/85 to-transparent transition-opacity duration-300 ease-out ${
+                    expandedCardIndex === 3 || hoveredCardIndex === 3
+                      ? "opacity-100"
+                      : "opacity-0"
+                  }`}
+                />
                 
                 {/* 手機版內容 */}
                 <div className="sm:hidden relative z-10 flex flex-col items-center justify-center h-full px-4 py-6">
@@ -731,8 +829,12 @@ export default function HomePage() {
                     >
                       <h4 className="text-xs font-bold text-white uppercase whitespace-nowrap">全線上服務</h4>
                       <p className="text-xs text-white/70">結束實體店面服務</p>
-                      <p className="text-xs text-white/80 leading-relaxed">
-                        2023年隨著網路與物流成熟，名片王結束實體門市，轉向線上服務，讓與客戶的溝通更即時、製作品質更專注。
+                      <p
+                        className={`text-xs text-white/80 leading-relaxed ${
+                          expandedCardIndex === 3 ? "" : "hidden"
+                        }`}
+                      >
+                        2023年，隨著網路與物流快速便利，名片王停止實體門市並轉向線上服務，與客戶的溝通將更即時且專注於製作品質。
                       </p>
                     </div>
                   ) : (
@@ -761,8 +863,12 @@ export default function HomePage() {
                   </p>
 
                   {/* 描述文字 */}
-                  <p className="relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow">
-                    2023年隨著網路與物流成熟，名片王結束實體門市，轉向線上服務，讓與客戶的溝通更即時、製作品質更專注。
+                  <p
+                    className={`relative z-10 text-white/80 text-xs sm:text-sm mb-6 flex-grow ${
+                      hoveredCardIndex === 3 ? "" : "hidden"
+                    }`}
+                  >
+                    2023年，隨著網路與物流快速便利，名片王停止實體門市並轉向線上服務，與客戶的溝通將更即時且專注於製作品質。
                   </p>
 
                 </div>
@@ -772,13 +878,32 @@ export default function HomePage() {
 
           {/* 公司介紹 */}
           <div className="mb-20 p-8 lg:p-12">
-            <div className="grid grid-cols-1 lg:grid-cols-[65%_35%] gap-8 lg:gap-12 max-w-6xl mx-auto items-start lg:items-center">
+            <div className="max-w-3xl mx-auto">
               {/* 左側：標題、描述 */}
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-white">
+              <div ref={aboutRef} className="space-y-6">
+                <h3
+                  className={`text-3xl lg:text-4xl font-bold text-white ${
+                    isAboutVisible ? "animate-fade-in-up" : "opacity-0"
+                  }`}
+                >
                   關於台灣名片王
                 </h3>
-                <div className="text-white/80 text-base lg:text-lg leading-relaxed space-y-4">
+                <div
+                  className={`h-px w-40 origin-left transition-transform duration-1000 ease-out ${
+                    isAboutVisible ? "scale-x-100" : "scale-x-0"
+                  }`}
+                  style={{ backgroundColor: "#FF6F61" }}
+                />
+                <div
+                  className={`text-white/80 text-base lg:text-lg leading-relaxed space-y-4 ${
+                    isAboutVisible ? "animate-fade-in-up-delay-2" : "opacity-0"
+                  }`}
+                  onAnimationEnd={() => {
+                    if (isAboutVisible) {
+                      setIsAboutAnimDone(true);
+                    }
+                  }}
+                >
                   <p className="text-justify">
                     台灣名片王，成立至今已逾二十年，專注於平面設計與印刷製作。
                     我們從名片出發，延伸至各類印刷品與品牌視覺，協助品牌將設計轉化為被看見、被觸摸的實體作品。
@@ -800,31 +925,6 @@ export default function HomePage() {
                   </p>
                 </div>
               </div>
-
-              {/* 右側：統計數據 */}
-              <div ref={statsRef} className="flex flex-row lg:flex-col gap-6 lg:gap-8 items-start lg:items-end justify-start lg:justify-start">
-                {/* 統計 1 */}
-                <div className="space-y-2 text-left lg:text-right">
-                  <div className="text-4xl lg:text-5xl font-bold text-white">{counters.stat1}</div>
-                  <div className="text-sm lg:text-base text-white/70">
-                    二十年服務不間斷
-                  </div>
-                </div>
-                {/* 統計 2 */}
-                <div className="space-y-2 text-left lg:text-right">
-                  <div className="text-4xl lg:text-5xl font-bold text-white">{counters.stat2.toLocaleString()}</div>
-                  <div className="text-sm lg:text-base text-white/70">
-                    服務顧客總數超過
-                  </div>
-                </div>
-                {/* 統計 3 */}
-                <div className="space-y-2 text-left lg:text-right">
-                  <div className="text-4xl lg:text-5xl font-bold text-white">{counters.stat3.toLocaleString()}</div>
-                  <div className="text-sm lg:text-base text-white/70">
-                    完成案件數超過
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -833,8 +933,8 @@ export default function HomePage() {
 
       {/* 價格試算表 */}
       <section id="calculator" className="py-28 px-6 scroll-mt-24 overflow-x-hidden">
-        <div className="max-w-7xl mx-auto">
-          <PriceCalculator />
+        <div ref={calculatorRef} className="max-w-7xl mx-auto">
+          <PriceCalculator isVisible={isCalculatorVisible} />
         </div>
       </section>
 
@@ -1118,7 +1218,7 @@ const THICK_COTTON_CARD_DATA = [
 ];
 
 // 價格試算表組件
-function PriceCalculator() {
+function PriceCalculator({ isVisible }: { isVisible: boolean }) {
   // 從價格表數據中提取名片材質選項
   const getCardMaterialOptions = () => {
     const materials: string[] = [];
@@ -1683,7 +1783,11 @@ function PriceCalculator() {
     <div className="rounded-lg">
       <div className="grid grid-cols-1 md:grid-cols-[70%_30%] gap-4 lg:gap-6">
         {/* 左側面板 - 合併後的輸入面板 */}
-        <div className="bg-[#f7931e] rounded-[26px] p-4 shadow-lg">
+        <div
+          className={`bg-[#f7931e] rounded-[26px] p-4 shadow-lg transition-all duration-[1000ms] ease-out ${
+            isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-6"
+          }`}
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-white text-sm font-medium mb-2">
@@ -1757,7 +1861,11 @@ function PriceCalculator() {
         </div>
 
         {/* 右側面板 - 計算結果（圓角長方形面板） */}
-        <div className="bg-gray-700 rounded-[26px] p-4 flex items-center justify-center shadow-lg min-h-[200px]">
+        <div
+          className={`bg-gray-700 rounded-[26px] p-4 flex items-center justify-center shadow-lg min-h-[200px] transition-all duration-[1700ms] ease-out ${
+            isVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-6"
+          }`}
+        >
           {!showPriceResult ? (
             <button
               onClick={() => setShowPriceResult(true)}
@@ -1964,27 +2072,29 @@ function FilePreparationCard() {
       </div>
 
       {/* 手機/平板版：浮動按鈕 */}
-      <button
-        onClick={() => setShowModal(true)}
-        className="lg:hidden fixed bottom-6 right-6 z-40 rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
-        style={{ backgroundColor: "rgb(255, 127, 127)" }}
-        aria-label="檔案準備注意事項"
-      >
-        <svg
-          xmlns="https://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={2}
-          stroke="currentColor"
-          className="w-6 h-6 text-white"
+      <div className="lg:hidden fixed bottom-6 right-6 z-[999] flex flex-col items-center gap-3">
+        <a
+          href="https://line.me/ti/p/@bbh4672t"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+          style={{ backgroundColor: "rgb(230, 230, 230)" }}
+          aria-label="LINE"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-          />
-        </svg>
-      </button>
+          <img src="/line-icon.svg" alt="LINE" className="w-6 h-6" />
+        </a>
+        <button
+          onClick={() => setShowModal(true)}
+          className="rounded-full p-4 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
+          style={{ backgroundColor: "rgb(255, 127, 127)" }}
+          aria-label="檔案準備注意事項"
+        >
+          <span className="text-white text-sm font-bold leading-none text-center">
+            <span className="block">注意</span>
+            <span className="block">事項</span>
+          </span>
+        </button>
+      </div>
 
       {/* Modal */}
       {showModal && (
@@ -2415,62 +2525,53 @@ function DeliverySection({
   title: string;
   children: React.ReactNode;
 }) {
-  const [flowTime, setFlowTime] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setFlowTime((prev) => prev + 0.02);
-    }, 50); // 每50ms更新一次，創造流動效果
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.2 }
+    );
 
-    return () => clearInterval(interval);
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
   }, []);
 
-  // 計算流動的漸層位置
-  const flowX = 50 + Math.sin(flowTime) * 30;
-  const flowY = 50 + Math.cos(flowTime * 0.7) * 25;
-
-  // 顏色一和顏色二
-  const color1 = { r: 78, g: 205, b: 196 }; // 中等青綠色 #4ECDC4
-  const color2 = { r: 44, g: 120, b: 115 }; // 深青綠色 #2C7873
-
-  // 根據流動位置計算混合顏色
-  const xNorm = flowX / 100;
-  const color1Weight = 1 - xNorm;
-  const color2Weight = xNorm;
-
-  const mixColor = () => {
-    const r = Math.round(color1.r * color1Weight + color2.r * color2Weight);
-    const g = Math.round(color1.g * color1Weight + color2.g * color2Weight);
-    const b = Math.round(color1.b * color1Weight + color2.b * color2Weight);
-    return `rgb(${r}, ${g}, ${b})`;
-  };
-
-  const centerColor = mixColor();
-  const color1Value = `rgb(${color1.r}, ${color1.g}, ${color1.b})`;
-  const color2Value = `rgb(${color2.r}, ${color2.g}, ${color2.b})`;
-
   return (
-    <section id={id} className="py-28 scroll-mt-24 relative overflow-hidden">
-      {/* 流動漸層背景 */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse 120% 120% at ${flowX}% ${flowY}%, ${centerColor} 0%, transparent 60%),
-            linear-gradient(to left, ${color1Value} 0%, transparent 70%),
-            linear-gradient(to right, ${color2Value} 0%, transparent 70%)
-          `,
-          backgroundBlendMode: "multiply, multiply, multiply",
-          transition: "background 0.5s ease-out",
-          zIndex: 0,
-        }}
-      />
-
+    <section
+      ref={sectionRef}
+      id={id}
+      className="py-28 scroll-mt-24 relative overflow-hidden"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
+    >
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        <h2 className="text-3xl font-bold tracking-wide mb-8 text-white text-center">
+        <h2
+          className={`text-3xl font-bold tracking-wide mb-8 text-white text-center transition-all duration-700 ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+        >
           {title}
         </h2>
-        {children}
+        <div
+          className={`transition-all duration-900 ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
+        >
+          {children}
+        </div>
       </div>
     </section>
   );
@@ -2478,14 +2579,44 @@ function DeliverySection({
 
 // 取貨方式組件
 function DeliveryOptions() {
+  const [isVisible, setIsVisible] = useState(false);
+  const optionsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsVisible(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const currentRef = optionsRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, []);
+
   return (
     <div className="w-full">
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 max-w-7xl mx-auto w-full">
+      <div
+        ref={optionsRef}
+        className="grid grid-cols-2 sm:grid-cols-4 gap-3 lg:gap-4 max-w-7xl mx-auto w-full"
+      >
         {/* 卡片 1 - 最便宜 - 自取 */}
         <div
-          className="rounded-lg p-4 sm:p-6 shadow-lg border border-white/20 flex flex-col"
+          className={`rounded-lg p-4 sm:p-6 shadow-lg border border-white/20 flex flex-col transition-all duration-[800ms] delay-[0ms] ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            backgroundColor: "rgb(255, 255, 255)",
             backdropFilter: "blur(20px) saturate(180%)",
             WebkitBackdropFilter: "blur(20px) saturate(180%)",
             minHeight: '300px'
@@ -2534,9 +2665,11 @@ function DeliveryOptions() {
 
         {/* 卡片 2 - 最貼心 - 宅配到府 */}
         <div
-          className="rounded-lg p-4 sm:p-6 shadow-lg border border-white/20 flex flex-col"
+          className={`rounded-lg p-4 sm:p-6 shadow-lg border border-white/20 flex flex-col transition-all duration-[900ms] delay-[250ms] ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            backgroundColor: "rgb(255, 255, 255)",
             backdropFilter: "blur(20px) saturate(180%)",
             WebkitBackdropFilter: "blur(20px) saturate(180%)",
             minHeight: '300px'
@@ -2577,9 +2710,11 @@ function DeliveryOptions() {
 
         {/* 卡片 3 - 最便利 - 貨到付款 */}
         <div
-          className="rounded-lg p-4 sm:p-6 shadow-lg border border-white/20 flex flex-col"
+          className={`rounded-lg p-4 sm:p-6 shadow-lg border border-white/20 flex flex-col transition-all duration-[1000ms] delay-[500ms] ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            backgroundColor: "rgb(255, 255, 255)",
             backdropFilter: "blur(20px) saturate(180%)",
             WebkitBackdropFilter: "blur(20px) saturate(180%)",
             minHeight: '300px'
@@ -2619,9 +2754,11 @@ function DeliveryOptions() {
 
         {/* 卡片 4 - 預留位置 */}
         <div
-          className="rounded-lg p-4 sm:p-6 shadow-lg border border-white/20 flex flex-col"
+          className={`rounded-lg p-4 sm:p-6 shadow-lg border border-white/20 flex flex-col transition-all duration-[1100ms] delay-[750ms] ease-out ${
+            isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+          }`}
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.7)",
+            backgroundColor: "rgb(255, 255, 255)",
             backdropFilter: "blur(20px) saturate(180%)",
             WebkitBackdropFilter: "blur(20px) saturate(180%)",
             minHeight: '300px'
