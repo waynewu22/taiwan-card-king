@@ -493,7 +493,7 @@ export default function HomePage() {
       <section
         id="about"
         className="scroll-mt-24 overflow-x-hidden"
-        style={{ backgroundColor: "rgb(128, 128, 128)" }}
+        style={{ backgroundColor: "rgba(45, 45, 45, 0.9)" }}
       >
         <div className="max-w-7xl mx-auto px-6 py-12">
           {/* 公司歷史 */}
@@ -2072,7 +2072,7 @@ function FilePreparationCard() {
       </div>
 
       {/* 手機/平板版：浮動按鈕 */}
-      <div className="lg:hidden fixed bottom-6 right-6 z-[999] flex flex-col items-center gap-3">
+      <div className="lg:hidden fixed bottom-6 right-6 z-[2147483647] pointer-events-auto flex flex-col items-center gap-3">
         <a
           href="https://line.me/ti/p/@bbh4672t"
           target="_blank"
