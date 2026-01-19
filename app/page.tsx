@@ -970,9 +970,9 @@ export default function HomePage() {
                 <img src="/email-icon.svg" alt="Email" className="w-8 h-8 transition-all duration-300 opacity-50 hover:opacity-100" />
               </a>
               <a
-                href="tel:0422549828"
+                href="tel:0422549929"
                 className="inline-block transition-all duration-300"
-                aria-label="電話: 04-22549828"
+                aria-label="電話: 04-2254-9929"
               >
                 <img src="/tel.svg" alt="電話" className="w-8 h-8 transition-all duration-300 opacity-50 hover:opacity-100" />
               </a>
@@ -1014,7 +1014,7 @@ function Footer() {
               聯絡方式
             </div>
             <div className="space-y-1">
-              <div>Tel. 04-22549828</div>
+              <div>Tel. 04-2254-9929</div>
               <div>Email. yunseng.design@msa.hinet.net</div>
               <div className="mt-2">
                 <a
